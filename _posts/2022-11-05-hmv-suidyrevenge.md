@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "HackMyVM: suidyrevenge"
-date:   "2022-11-05"
+date:   2022-11-05
 categories: hackmyvm
 tags: [RCE, hydra, ssh, SUID]
 ---
