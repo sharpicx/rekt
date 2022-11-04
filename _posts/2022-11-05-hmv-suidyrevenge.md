@@ -1,10 +1,11 @@
 ---
 layout: post
-title:  "HackMyVM: suidyrevenge"
-date:   2022-11-05 9:12:33
-categories: hackmyvm
+title:  "HackMyVM: Suidyrevenge"
+date:   2022-11-05
+categories: [hackmyvm]
 tags: [RCE, hydra, ssh, SUID]
 ---
+
 
 Hello, this is small things i've been doing lately because of getting bored. kukira susah karena *difficulty*-nya. ya, cuma buka scan nmap terus crawling semua text, masuk ke hydra untuk bruteforce lalu dapet credentials-nya dan masuk lewat `ssh`. dan ya biasanya lagi, jalanin `linpeas` dan dapet suid binary yang sebelumnya ada `note.txt` tertulis kalo `root` bakal *autorun* sebuah script untuk ganti *owner* dan beri akses *suid* dan boom rooted.
 
