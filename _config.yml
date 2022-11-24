@@ -45,7 +45,7 @@ disqus:          # disqus account
 mathjax: true # Mathematics
 mermaid: true # Diagrams
 
-permalink: /:year/:month/:day/:title
+permalink: /:title
 
 sass:
   sass_dir: _sass
