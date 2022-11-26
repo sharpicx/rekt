@@ -3,7 +3,7 @@ layout: post
 title: "VulnHub: Beelzebub"
 date: 2022-11-17
 categories: [vulnhub]
-tags: []
+tags: [serv-u, arp-scan, wordpress]
 ---
 
 
