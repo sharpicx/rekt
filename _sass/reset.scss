@@ -13,10 +13,12 @@ html, body {
 a {
   text-decoration: none;
   color: #000;
+  border-bottom: 1px solid black;
 }
 
 a:hover {
   color: #aaa;
+  border-bottom: 1px solid #aaa;
 }
 
 blockquote {

@@ -1,5 +1,51 @@
 @charset "utf-8";
 
+section + section,
+section:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+section:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+details, aside, pre, progress {
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  padding: 0.7rem 1rem;
+}
+summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0.7rem 1rem;
+  margin: -0.7rem -1rem;
+  word-break: break-all;
+}
+details [open] summary + * {
+    margin-top: 0;
+}
+details[open] summary {
+    margin-bottom: 0.5rem;
+}
+details[open] > :last-child {
+    margin-bottom: 0;
+}
+table {
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  overflow: auto;
+  width: 100%;
+}
+table caption {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+// --
+
 .task-list-item {
   list-style: none;
 }
