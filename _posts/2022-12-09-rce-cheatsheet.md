@@ -4,7 +4,7 @@ title: "Note: RCE cheatsheet"
 date: 2022-12-09
 ---
 
-Karena, saya rada kesusahan untuk mengumpulkan resource jika nanti googling-googling. Dan note yang saya pakai juga tidak lengkap referensinya, maka saya kumpulkan di sini. 
+Karena saya rada kesusahan untuk mengumpulkan resource jika nanti googling-googling. Dan note yang saya pakai juga tidak lengkap referensinya, maka saya kumpulkan di sini. 
 
 Jika ada malicious upload, maka yang seharusnya dilakukan adalah memanipulasi file extension atau memanipulasi isi dari file tersebut
 
