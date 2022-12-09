@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Note: RCE cheatsheet"
+title: "Note: RCE to Image"
 date: 2022-12-09
 ---
 
