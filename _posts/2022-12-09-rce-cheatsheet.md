@@ -26,7 +26,7 @@ Dengan format seperti ini, btw ini format favorit saya.
 ```
 
 ## Kasus
-ada kasus menarik dari mesin [Beloved: HackMyVM], exploit yang saya jalankan dengan request `image` tidak berfungsi, jadi saya menggunakan trik manual yaitu mengganti format menjadi `.jpg.php` untuk membypass.
+ada kasus menarik dari mesin [Beloved: HackMyVM](https://hackmyvm.eu/machines/machine.php?vm=Beloved), exploit yang saya jalankan dengan request `image` tidak berfungsi, jadi saya menggunakan trik manual yaitu mengganti format menjadi `.jpg.php` untuk membypass.
 
 ![image](https://i.postimg.cc/63Vx9Pzf/image.png)
 
