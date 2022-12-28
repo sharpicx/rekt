@@ -66,3 +66,12 @@ sleep 100
 bash -p
 ```
 Saya jelaskan dulu bagaimana kode ini bekerja dan membuat muak hidup saya hingga 1 jam untuk melihat bahwasanya ini adalah hal konyol. Saya tidak menggunakan script ini untuk dieksekusi, tetapi saya menggunakan ini sebagai shortcut untuk melihat apakah pasti atau tidak.
+
+`conf` itu adalah sebuah variable yang diisi string untuk direplace ke `iptables-multiport.conf`. ya di dalamnya terdapat `actionban` dengan value `chmod 4755 /bin/bash` sebagai command yang di-abuse ke `/bin/bash` untuk mendapatkan `SETUID` dan bisa dielevasi ke `root` menggunakan parameter `-p`.
+
+![image](https://i.postimg.cc/4x4t2ZbP/image.png)
+[source](https://chmodcommand.com/chmod-4755/)
+
+lalu perintah `sudo /etc/init.d/fail2ban` adalah relatif tergantung kasus yang ada. Perintah ini digunakan untuk memulai ulang firewall tersebut dan me-reload konfigurasi. Di kasus yang saya temukan itu menggunakan `sudo -l` abusing.
+
+![image](https://i.postimg.cc/6pVjn96h/image.png)
